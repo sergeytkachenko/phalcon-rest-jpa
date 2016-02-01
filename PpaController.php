@@ -11,18 +11,25 @@ class PpaController extends JsonController
 	}
 
 	public function crudAction() {
-		$params = $this->getParams();
 		$url = $this->request->get('_url');
 		if (!$url) {
 			throw new Exception('_url is mast specific');
 		}
+		$params = $this->getParams();
+		$isOnlyFirst = !PPACriteria::hasMany($url);
+		$isFetchRelations = array_key_exists('fetchRelations', $params);
 
-		$hasMany = PPACriteria::hasMany($url);
-		$data = in_array('fetchRelations', $params)
-			? PPACriteria::fetchWithRelations($url, $params)
-			: PPACriteria::fetch($url, $params);
-
+		$data = PPACriteria::fetch($url, $params);
 		if (!$data) {return array();}
-		return $hasMany ? $data : $data[0];
+		if ($isOnlyFirst) {
+			$data = $data->getFirst();
+			return $isFetchRelations ? $data->fetchRelations()->toArrayRelations() : $data->toArray();
+		}
+		if ($isFetchRelations) {
+			return $data->filter(function($model) {
+				return $model->fetchRelations();
+			});
+		}
+		return $data->toArray();
 	}
 }

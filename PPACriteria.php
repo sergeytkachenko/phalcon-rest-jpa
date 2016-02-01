@@ -17,25 +17,8 @@ abstract class PPACriteria
 	 * @return array|\Phalcon\Mvc\Model\ResultsetInterface
 	 */
 	public static function fetch($url, $params) {
-		$hasMany = self::hasMany($url);
 		$criteria = self::buildCriteria($url, $params);
-		if (!$hasMany) {
-			$criteria->limit(1);
-		}
 		return $criteria->execute();
-	}
-
-	/**
-	 * @param $url
-	 * @param $params
-	 * @return array|\Phalcon\Mvc\Model\ResultsetInterface
-	 */
-	public static function fetchWithRelations($url, $params) {
-		$models = self::fetch($url, $params);
-		if ($models === array()) {return array();}
-		return $models->filter(function($model) {
-			return $model->fetchRelations();
-		});
 	}
 
 	/**
