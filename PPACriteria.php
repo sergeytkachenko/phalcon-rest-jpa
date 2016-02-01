@@ -21,7 +21,7 @@ abstract class PPACriteria
 		$criteria = self::buildCriteria($url, $params);
 		if (!$hasMany) {
 			$result = $criteria->limit(1)->execute();
-			return $result ? $result[0]->toArray() : array();
+			return $result ? $result[0] : array();
 		}
 		return $criteria->execute();
 	}
@@ -33,6 +33,7 @@ abstract class PPACriteria
 	 */
 	public static function fetchWithRelations($url, $params) {
 		$models = self::fetch($url, $params);
+		if ($models === array()) {return array();}
 		return $models->filter(function($model) {
 			return $model->fetchRelations();
 		});
