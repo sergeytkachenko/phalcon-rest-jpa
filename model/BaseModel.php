@@ -63,4 +63,14 @@ trait BaseModel
 
 		return $data;
 	}
+
+	/**
+	 * Сохраняет в модели только те поля, которые в ней есть
+	 * @param array $data
+	 * @return mixed
+	 */
+	public function saveOnlyAttributes(array $data) {
+		$this->assign($data);
+		return $this->save($data);
+	}
 }
