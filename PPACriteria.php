@@ -121,6 +121,7 @@ abstract class PPACriteria
 	 */
 	private static function getParams($params, $actions) {
 		$columns = self::getColumns($actions);
+		$columns = PPAOperators::getClearColumnsName($columns);
 		foreach ($params as $key => $param) {
 			if (!in_array($key, $columns)) {
 				unset($params[$key]);

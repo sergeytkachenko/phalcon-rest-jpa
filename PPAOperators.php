@@ -14,4 +14,13 @@ abstract class PPAOperators
 		}
 		return Text::uncamelize($fieldName) . ' = :' . lcfirst($fieldName) . ':';
 	}
+
+	public static function getClearColumnsName($columns) {
+		foreach ($columns as $key => $column) {
+			if (preg_match(self::LIKE_PATTERN, $column)) {
+				$columns[$key] = preg_replace(self::LIKE_PATTERN, '$1', $column);
+			}
+		}
+		return $columns;
+	}
 }
