@@ -35,7 +35,7 @@ abstract class PPACriteria
 		$hasMany = self::hasMany($url);
 		$models = self::fetch($url, $params);
 		if ($models === array()) {return array();}
-		if (!$hasMany) {return $models->fetchRelations();}
+		if (!$hasMany) {return $models->assignRelation();}
 		return $models->filter(function($model) {
 			return $model->fetchRelations();
 		});
