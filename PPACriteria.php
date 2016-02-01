@@ -99,8 +99,8 @@ abstract class PPACriteria
 	private static function buildOR($actions) {
 		$conditions = array();
 		$OrList = explode('-', $actions);
-		foreach ($OrList as $field) {
-			$conditions[] = Text::uncamelize($field) . ' = :' . lcfirst($field) . ':';
+		foreach ($OrList as $fieldName) {
+			$conditions[] = PPAOperators::buildOperation($fieldName);
 		}
 		return implode(' OR ', $conditions);
 	}
