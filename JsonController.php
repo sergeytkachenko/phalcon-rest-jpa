@@ -25,6 +25,8 @@ class JsonController extends Controller {
 		$this->response->setContentType('application/json', 'UTF-8');
 		$this->response->setContent($data);
 		$this->response->send();
+		// TODO bug fix
+		exit;
 	}
 
 	public function jsonRecursiveGetMsg ($dataList) {
