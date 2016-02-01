@@ -10,8 +10,8 @@ abstract class PPAOperators
 	public static function buildOperation($fieldName) {
 		if (preg_match(self::LIKE_PATTERN, $fieldName)) {
 			$fieldName = preg_replace(self::LIKE_PATTERN, '$1', $fieldName);
-			return Text::uncamelize($fieldName) . ' LIKE :' . Text::camelize($fieldName) . ':';
+			return Text::uncamelize($fieldName) . ' LIKE :' . lcfirst($fieldName) . ':';
 		}
-		return Text::uncamelize($fieldName) . ' = :' . Text::camelize($fieldName) . ':';
+		return Text::uncamelize($fieldName) . ' = :' . lcfirst($fieldName) . ':';
 	}
 }
