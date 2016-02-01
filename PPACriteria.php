@@ -80,7 +80,7 @@ abstract class PPACriteria
 	 * @param $url
 	 * @return bool
 	 */
-	private static function hasMany($url) {
+	public static function hasMany($url) {
 		return (bool) preg_match('/\/s\//', $url);
 	}
 

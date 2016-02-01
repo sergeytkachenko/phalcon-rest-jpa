@@ -16,11 +16,13 @@ class PpaController extends JsonController
 		if (!$url) {
 			throw new Exception('_url is mast specific');
 		}
-		if (in_array('fetchRelations', $params)) {
-			$data = PPACriteria::fetchWithRelations($url, $params);
-		} else {
-			$data = PPACriteria::fetch($url, $params);
-		}
-		return $data ? $data->toArray() : array();
+
+		$hasMany = PPACriteria::hasMany($url);
+		$data = in_array('fetchRelations', $params)
+			? PPACriteria::fetchWithRelations($url, $params)
+			: PPACriteria::fetch($url, $params);
+
+		if (!$data) {return array();}
+		return $hasMany ? $data : $data[0];
 	}
 }
