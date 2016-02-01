@@ -32,9 +32,10 @@ abstract class PPACriteria
 	 * @return array|\Phalcon\Mvc\Model\ResultsetInterface
 	 */
 	public static function fetchWithRelations($url, $params) {
+		$hasMany = self::hasMany($url);
 		$models = self::fetch($url, $params);
 		if ($models === array()) {return array();}
-		if ($models->count() == 1) {return $models->fetchRelations();}
+		if (!$hasMany) {return $models->fetchRelations();}
 		return $models->filter(function($model) {
 			return $model->fetchRelations();
 		});
