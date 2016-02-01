@@ -23,7 +23,19 @@ abstract class PPACriteria
 			$result = $criteria->limit(1)->execute();
 			return $result ? $result[0]->toArray() : array();
 		}
-		return $criteria->execute()->toArray();
+		return $criteria->execute();
+	}
+
+	/**
+	 * @param $url
+	 * @param $params
+	 * @return array|\Phalcon\Mvc\Model\ResultsetInterface
+	 */
+	public static function fetchWithRelations($url, $params) {
+		$models = self::fetch($url, $params);
+		return $models->filter(function($model) {
+			return $model->fetchRelations();
+		});
 	}
 
 	/**
