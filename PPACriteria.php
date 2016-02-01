@@ -34,6 +34,7 @@ abstract class PPACriteria
 	public static function fetchWithRelations($url, $params) {
 		$models = self::fetch($url, $params);
 		if ($models === array()) {return array();}
+		if ($models->count() == 1) {return $models->fetchRelations();}
 		return $models->filter(function($model) {
 			return $model->fetchRelations();
 		});
