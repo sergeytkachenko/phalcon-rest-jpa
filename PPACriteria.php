@@ -20,8 +20,7 @@ abstract class PPACriteria
 		$hasMany = self::hasMany($url);
 		$criteria = self::buildCriteria($url, $params);
 		if (!$hasMany) {
-			$result = $criteria->limit(1)->execute();
-			return $result ? $result[0] : array();
+			$criteria->limit(1);
 		}
 		return $criteria->execute();
 	}
@@ -32,10 +31,8 @@ abstract class PPACriteria
 	 * @return array|\Phalcon\Mvc\Model\ResultsetInterface
 	 */
 	public static function fetchWithRelations($url, $params) {
-		$hasMany = self::hasMany($url);
 		$models = self::fetch($url, $params);
 		if ($models === array()) {return array();}
-		if (!$hasMany) {return $models->assignRelation();}
 		return $models->filter(function($model) {
 			return $model->fetchRelations();
 		});
