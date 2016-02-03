@@ -1,11 +1,5 @@
 {
 	"name":"stkachenko/ppa",
 	"type": "library",
-	"version":"1.0.1",
-	"autoload":{
-		"psr-0":{
-			"PPA":"",
-			"PPA\\Rest":"/rest"
-		}
-	}
+	"version":"1.0.1"
 }
