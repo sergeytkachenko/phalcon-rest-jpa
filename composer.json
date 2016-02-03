@@ -3,8 +3,8 @@
 	"type": "library",
 	"version":"dev-master",
 	"autoload":{
-		"psr-0":{
-			"PPA":"",
+		"psr-4":{
+			"PPA\\":"",
 			"PPA\\Rest":"/rest",
 			"PPA\\Rest\\Model":"/rest/model"
 		}
