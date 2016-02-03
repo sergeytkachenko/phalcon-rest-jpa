@@ -1,5 +1,5 @@
 <?
-namespace Lib\Rest\Model;
+namespace PPA\Rest\Model;
 
 /**
 * Class BaseModel

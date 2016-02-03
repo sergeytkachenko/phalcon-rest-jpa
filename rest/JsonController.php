@@ -1,5 +1,5 @@
 <?
-namespace Lib\Rest;
+namespace PPA\Rest;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher;
