@@ -1,5 +1,10 @@
 {
 	"name":"stkachenko/ppa",
 	"type": "library",
-	"version":"dev-master"
+	"version":"dev-master",
+	"autoload":{
+		"psr-0":{
+			"PPA":""
+		}
+	}
 }
