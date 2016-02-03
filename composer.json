@@ -4,7 +4,9 @@
 	"version":"dev-master",
 	"autoload":{
 		"psr-0":{
-			"PPA":""
+			"PPA":"",
+			"PPA\\Rest":"/rest",
+			"PPA\\Rest\\Model":"/rest/model"
 		}
 	}
 }
