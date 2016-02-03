@@ -1,5 +1,5 @@
 {
-	"name":"s.tkachenko/ppa",
+	"name":"stkachenko/ppa",
 	"type": "library",
 	"version":"1.0.1",
 	"autoload":{
