@@ -23,6 +23,7 @@ class PpaController extends JsonController
 		if (!$data) {return array();}
 		if ($isOnlyFirst) {
 			$data = $data->getFirst();
+			if(!$data) {return array();}
 			return $isFetchRelations ? $data->fetchRelations()->toArrayRelations() : $data->toArray();
 		}
 		if ($isFetchRelations) {
