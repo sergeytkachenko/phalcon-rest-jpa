@@ -4,7 +4,7 @@
 	"version":"dev-master",
 	"autoload":{
 		"psr-4":{
-			"PPA":"\\"
+			"PPA\\":"src"
 		}
 	}
 }
