@@ -2,7 +2,7 @@
 namespace PPA\Rest\Model;
 
 /**
-* Class BaseModel
+ * Class BaseModel
  * Служит базовым вспомагательным "класом" для потдержки общих методов моделей
 */
 trait BaseModel
