@@ -8,7 +8,8 @@ use PPA\Rest\Url\Analyzer;
 class PpaController extends JsonController
 {
 	private function getParams() {
-		return array_merge($this->request->get(), $this->request->getPost(), $this->request->getPut());
+		$jsonRawBody = (array)$this->request->getJsonRawBody();
+		return array_merge($this->request->get(), $this->request->getPost(), $this->request->getPut(), $jsonRawBody);
 	}
 
 	public function crudAction() {
