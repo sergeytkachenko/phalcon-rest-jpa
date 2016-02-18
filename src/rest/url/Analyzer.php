@@ -1,6 +1,8 @@
 <?php
 namespace PPA\Rest\Url;
 
+use Phalcon\Text;
+
 abstract class Analyzer
 {
 	/**
@@ -27,7 +29,13 @@ abstract class Analyzer
 		return (bool) preg_match('/\/delete(\/)?(\?.*)?$/', $url);
 	}
 
+	/**
+	 * Выбирает название модели.
+	 * @param $url Url всего ppa запроса.
+	 * @return string Название модели.
+	 */
 	public static function getModelName($url) {
-		return preg_replace('/.*ppa\/(s\/)?([a-zA-Z0-9]+).*/', '$2', $url);
+		$modelName = preg_replace('/.*ppa\/(s\/)?([a-zA-Z0-9]+).*/', '$2', $url);
+		return Text::camelize($modelName);
 	}
 }

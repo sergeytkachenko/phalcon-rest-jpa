@@ -85,7 +85,7 @@ class AnalyzerUnitTest extends \UnitTestCase
 				foreach ($operation as $url) {
 					$this->assertEquals(
 						Analyzer::getModelName($url . $suffix),
-						'brands',
+						'Brands',
 						'getModelName equal brands with '. $url . $suffix
 					);
 				}
