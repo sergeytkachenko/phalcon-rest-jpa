@@ -17,17 +17,17 @@ class AnalyzerUnitTest extends \UnitTestCase
 
 	static $crud = array(
 		'fetch' => array(
-			'/ppa/s/brands/findById',
-			'/api/ppa/brands',
-			'/api/ppa/s/brands'
+			'/ppa/s/targetGroup/findById',
+			'/api/ppa/targetGroup',
+			'/api/ppa/s/targetGroup'
 		),
 		'save' => array(
-			'/ppa/brands/save',
-			'/api/ppa/brands/save',
+			'/ppa/targetGroup/save',
+			'/api/ppa/targetGroup/save',
 		),
 		'delete' => array(
-			'/ppa/brands/delete',
-			'/api/ppa/brands/delete'
+			'/ppa/targetGroup/delete',
+			'/api/ppa/targetGroup/delete'
 		)
 	);
 
@@ -85,8 +85,8 @@ class AnalyzerUnitTest extends \UnitTestCase
 				foreach ($operation as $url) {
 					$this->assertEquals(
 						Analyzer::getModelName($url . $suffix),
-						'Brands',
-						'getModelName equal brands with '. $url . $suffix
+						'TargetGroup',
+						'getModelName equal targetGroup with '. $url . $suffix
 					);
 				}
 			}

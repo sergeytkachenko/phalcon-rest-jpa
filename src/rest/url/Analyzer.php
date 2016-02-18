@@ -36,6 +36,7 @@ abstract class Analyzer
 	 */
 	public static function getModelName($url) {
 		$modelName = preg_replace('/.*ppa\/(s\/)?([a-zA-Z0-9]+).*/', '$2', $url);
-		return Text::camelize($modelName);
+		$unCamelize = Text::uncamelize($modelName);
+		return Text::camelize($unCamelize);
 	}
 }
