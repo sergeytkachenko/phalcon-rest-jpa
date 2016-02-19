@@ -36,6 +36,33 @@ trait BaseModel
 	}
 
 	/**
+	 * Возвращает связь многие ко многим по alias.
+	 * @param $relationAlias
+	 * @return \Phalcon\Mvc\Model\Relation
+	 */
+	public function getHasManyRelation($relationAlias) {
+		/**
+		 * @var \Phalcon\Mvc\Model\Relation[] $relations
+		 */
+		$relations = $this->getModelsManager()->getHasMany($this);
+		foreach ($relations as $relation) {
+			if ($relation->getOption('alias') == $relationAlias) {
+				return $relation;
+			}
+		}
+	}
+
+	/**
+	 * Возвращает название колонки связи многие ко многим, по alias связи.
+	 * @param $relationAlias
+	 * @return array|string
+	 */
+	public function getHasManyRelationReferencedFields($relationAlias) {
+		$relation = $this->getHasManyRelation($relationAlias);
+		return $relation->getReferencedFields();
+	}
+
+	/**
 	 * Обращается и подгружает связанные данные сущности
 	 * @param $relation
 	 * @return $this|void

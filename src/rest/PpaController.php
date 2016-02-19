@@ -107,15 +107,19 @@ class PpaController extends JsonController
 		foreach ($relations as $relationName => $relationValues) {
 			if (!is_array($relationValues)) {continue;}
 			$messages = $this->deleteRelation($model, $relationName, $messages);
-			$messages = $this->createRelation($relationName, $relationValues, $messages);
+			$messages = $this->createRelation($model, $relationName, $relationValues, $messages);
 		}
 		return $messages;
 	}
 
-	private function createRelation( $relationName, $relationValues, $messages = array()) {
+	private function createRelation($model, $relationName, $relationValues, $messages = array()) {
 		foreach ($relationValues as $relationValue) {
 			$relation = new $relationName;
 			$relation->assign($relationValue);
+			$referencedFields = $model->getHasManyRelationReferencedFields($relationName);
+			$relation->assign(array(
+				$referencedFields => $model->id
+			));
 			if (!$relation->save()) {
 				$messages[] = implode(', ', $relation->getMessages());
 			}
