@@ -59,7 +59,7 @@ class PpaController extends JsonController
 			}
 			$model->assign($params);
 			if ($model->save()) {
-				$errors = $this->saveRelations($model, Params::getRelation($this->request));
+				$errors = $this->saveRelations($model, Params::getRelations($this->request));
 				if ($errors !== array()) {
 					return array(
 						'success' => false,
@@ -83,7 +83,7 @@ class PpaController extends JsonController
 		$model = new $modelName();
 		$model->assign($params);
 		if ($model->save()) {
-			$errors = $this->saveRelations($model, Params::getRelation($this->request));
+			$errors = $this->saveRelations($model, Params::getRelations($this->request));
 			if ($errors !== array()) {
 				return array(
 					'success' => false,
