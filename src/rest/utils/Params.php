@@ -38,7 +38,7 @@ abstract class Params
 	 * @return array All request params (GET, POST, PUT, RawJsonBody)
 	 */
 	public static function getParams(Request $request) {
-		$jsonRawBody = (array)$request->getJsonRawBody();
+		$jsonRawBody = (array)$request->getJsonRawBody(true);
 		return array_merge((array)$request->get(), (array)$request->getPost(), (array)$request->getPut(), $jsonRawBody);
 	}
 }
