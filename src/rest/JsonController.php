@@ -18,6 +18,9 @@ class JsonController extends Controller {
 	public function afterExecuteRoute(Dispatcher $dispatcher) {
 		$this->view->disable();
 		$data = $dispatcher->getReturnedValue();
+		if (is_array($data) and array_key_exists('success', $data) and $data['success'] === false) {
+			$this->setBadRequestStatus();
+		}
 		if (is_array($data)) {
 			$data = json_encode($data);
 		}
@@ -37,4 +40,7 @@ class JsonController extends Controller {
 		return $messages;
 	}
 
+	protected function setBadRequestStatus() {
+		$this->response->setStatusCode(400);
+	}
 }
