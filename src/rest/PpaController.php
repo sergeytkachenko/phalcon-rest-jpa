@@ -82,7 +82,7 @@ class PpaController extends JsonController
 		 */
 		$model = new $modelName();
 		$model->assign($params);
-		if ($id = $model->save()) {
+		if ($model->save()) {
 			$errors = $this->saveRelations($model, Params::getRelations($this->request));
 			if ($errors !== array()) {
 				return array(
@@ -93,7 +93,7 @@ class PpaController extends JsonController
 			return array(
 				'success' => true,
 				'msg' => 'New record saved!',
-				'id' => $id
+				'id' => $model->id
 			);
 		}
 		return array(
