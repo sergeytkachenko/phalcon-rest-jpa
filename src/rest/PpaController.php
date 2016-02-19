@@ -4,14 +4,10 @@ namespace PPA\Rest;
 use Phalcon\Exception;
 use Phalcon\Mvc\Dispatcher;
 use PPA\Rest\Url\Analyzer;
+use PPA\Rest\Utils\Params;
 
 class PpaController extends JsonController
 {
-	private function getParams() {
-		$jsonRawBody = (array)$this->request->getJsonRawBody();
-		return array_merge($this->request->get(), $this->request->getPost(), $this->request->getPut(), $jsonRawBody);
-	}
-
 	public function crudAction() {
 		$url = $this->request->get('_url');
 		if (!$url) {
@@ -23,7 +19,7 @@ class PpaController extends JsonController
 		if (Analyzer::isDeleting($url)) {
 			return $this->delete();
 		}
-		$params = $this->getParams();
+		$params = Params::getParams($this->request);
 		$isOnlyFirst = !PPACriteria::hasMany($url);
 		$isFetchRelations = array_key_exists('fetchRelations', $params);
 
@@ -47,7 +43,7 @@ class PpaController extends JsonController
 	 * @return array
 	 */
 	private function save() {
-		$params = $this->getParams();
+		$params = Params::getParams($this->request);
 		$id = intval(@$params['id']);
 		$modelName = Analyzer::getModelName($this->request->get('_url'));
 		if ($id) {
@@ -63,6 +59,13 @@ class PpaController extends JsonController
 			}
 			$model->assign($params);
 			if ($model->save()) {
+				$errors = $this->saveRelations($model, Params::getRelation($this->request));
+				if ($errors !== array()) {
+					return array(
+						'success' => false,
+						'msg' => implode('<br>', $errors)
+					);
+				}
 				return array(
 					'success' => true,
 					'msg' => 'Record with id '. $id .' saved!'
@@ -80,6 +83,13 @@ class PpaController extends JsonController
 		$model = new $modelName();
 		$model->assign($params);
 		if ($model->save()) {
+			$errors = $this->saveRelations($model, Params::getRelation($this->request));
+			if ($errors !== array()) {
+				return array(
+					'success' => false,
+					'msg' => implode('<br>', $errors)
+				);
+			}
 			return array(
 				'success' => true,
 				'msg' => 'New record saved!'
@@ -91,12 +101,47 @@ class PpaController extends JsonController
 		);
 	}
 
+	private function saveRelations($model, $relations, $messages = array()) {
+		$id = @$model->id;
+		if (!$model or !$id) {return;}
+		foreach ($relations as $relationName => $relationValues) {
+			if (!is_array($relationValues)) {continue;}
+			$messages = $this->deleteRelation($model, $relationName, $messages);
+			$messages = $this->createRelation($model, $relationName, $relationValues, $messages);
+		}
+		return $messages;
+	}
+
+	private function createRelation($model, $relationName, $relationValues, $messages = array()) {
+		foreach ($model->{$relationName} as $relation) {
+			/**
+			 * @var \Phalcon\Mvc\Model $relationCreated
+			 */
+			$relation = new $relationName;
+			$relation->assign($relationValues);
+			$messages = $relation->save();
+		}
+		return $messages;
+	}
+
+	private function deleteRelation($model, $relationName, $messages = array()) {
+		foreach ($model->{$relationName} as $related) {
+			/**
+			 * @var \Phalcon\Mvc\Model $related
+			 */
+			if (!$related->delete()) {
+				$messages[] = implode(', ', $related->getMessages());
+			}
+		}
+		return $messages;
+	}
+
 	/**
 	 * Delete record from DB.
 	 * @return array
 	 */
 	private function delete() {
-		$params = $this->getParams();
+		$params = Params::getParams($this->request);
 		if (empty($params['id'])) {
 			return array(
 				'success' => false,
