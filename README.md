@@ -16,8 +16,8 @@
 |---------|--------|-------------|
 | *Fetch all* | /api/ppa/brands/s/  | Вернет все бренды |
 | *Fetch first* | /api/ppa/brands/  | Вернет первый, попавшийся бренд |
-| *And* | /api/ppa/brands/findByIdAndTitleOrOldId  | <pre>… where (x.id = :id:) AND (x.title = :title: OR x.old_id = :oldId:)</pre> |
-| *Or* | /api/ppa/brands/findByIdAndTitle | <pre>… where x.id = :id: OR x.title = :title:</pre>  |
+| *And* | /api/ppa/brands/findByIdAndTitle  | <pre>… where x.id = :id: AND x.title = :title:</pre> |
+| *Or* | /api/ppa/brands/findByIdOrTitle | <pre>… where x.id = :id: OR x.title = :title:</pre>  |
 | *Like* | /api/ppa/clients/findByLastNameLikeOrNameLike | <pre>… where x.lastName LIKE :lastName: OR x.name LIKE :name:</pre>  |
 
 <pre>
