@@ -21,6 +21,10 @@ class AnalyzerUnitTest extends \UnitTestCase
 			'/api/ppa/targetGroup',
 			'/api/ppa/s/targetGroup'
 		),
+		'search' => array(
+			'/ppa/s/targetGroup/search',
+			'/api/ppa/s/targetGroup/search'
+		),
 		'save' => array(
 			'/ppa/targetGroup/save',
 			'/api/ppa/targetGroup/save',
@@ -71,8 +75,24 @@ class AnalyzerUnitTest extends \UnitTestCase
 				foreach ($operation as $url) {
 					$this->assertEquals(
 						Analyzer::isFetching($url . $suffix),
-						$key === $operatorExpected ? true : false,
+						$key !== 'delete' and $key !== 'save' ? true : false,
 						'isFetching '. $key === $operatorExpected ? '' : 'not'  .' equal fetch url with '. $url . $suffix
+					);
+				}
+			}
+		}
+	}
+
+	public function testIsSearching()
+	{
+		$operatorExpected = 'search';
+		foreach (self::$variation as $suffix) {
+			foreach (self::$crud as $key => $operation) {
+				foreach ($operation as $url) {
+					$this->assertEquals(
+						Analyzer::isSearchingAllColumns($url . $suffix),
+						$key === $operatorExpected ? true : false,
+						'isSearchingAllColumns '. $key === $operatorExpected ? '' : 'not'  .' equal search url with '. $url . $suffix
 					);
 				}
 			}

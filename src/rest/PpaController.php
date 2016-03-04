@@ -4,6 +4,8 @@ namespace PPA\Rest;
 use Phalcon\Exception;
 use Phalcon\Mvc\Dispatcher;
 use PPA\Rest\Url\Analyzer;
+use PPA\Rest\Url\Operations;
+use PPA\Rest\Url\Operators;
 use PPA\Rest\Utils\Params;
 
 class PpaController extends JsonController
@@ -23,7 +25,10 @@ class PpaController extends JsonController
 		$isOnlyFirst = !PPACriteria::hasMany($url);
 		$isFetchRelations = array_key_exists('fetchRelations', $params);
 
-		$data = PPACriteria::fetch($url, $params);
+		$builder = Operators::buildQuery($url, $params);
+		$data = $builder->getQuery()->execute();
+
+		//$data = PPACriteria::fetch($url, $params);
 		if (!$data) {return array();}
 		if ($isOnlyFirst) {
 			$data = $data->getFirst();

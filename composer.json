@@ -8,6 +8,8 @@
 			"PPA\\Rest\\":"src/rest",
 			"PPA\\Rest\\Model\\":"src/rest/model",
 			"PPA\\Rest\\Url\\":"src/rest/url",
+			"PPA\\Rest\\Column\\":"src/rest/column",
+			"PPA\\Rest\\Request\\":"src/rest/request",
 			"PPA\\Rest\\Utils\\":"src/rest/utils"
 		}
 	},

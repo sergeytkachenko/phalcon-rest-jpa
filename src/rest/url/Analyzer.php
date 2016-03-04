@@ -15,6 +15,14 @@ abstract class Analyzer
 
 	/**
 	 * @param $url Url всего ppa запроса.
+	 * @return bool Пришел ли запрос на удаление сущности.
+	 */
+	public static function isDeleting($url) {
+		return (bool) preg_match('/\/delete(\/)?(\?.*)?$/', $url);
+	}
+
+	/**
+	 * @param $url Url всего ppa запроса.
 	 * @return bool Пришел ли запрос на выборку сущности.
 	 */
 	public static function isFetching($url) {
@@ -23,10 +31,10 @@ abstract class Analyzer
 
 	/**
 	 * @param $url Url всего ppa запроса.
-	 * @return bool Пришел ли запрос на удаление сущности.
+	 * @return bool Пришел ли запрос на поиск по всем колонкам модели.
 	 */
-	public static function isDeleting($url) {
-		return (bool) preg_match('/\/delete(\/)?(\?.*)?$/', $url);
+	public static function isSearchingAllColumns($url) {
+		return (bool) preg_match('/\/s\/[a-zA-Z0-9]+\/search(\/)?(\?.*)?$/', $url);
 	}
 
 	/**
@@ -36,7 +44,6 @@ abstract class Analyzer
 	 */
 	public static function getModelName($url) {
 		$modelName = preg_replace('/.*ppa\/(s\/)?([a-zA-Z0-9]+).*/', '$2', $url);
-		$unCamelize = Text::uncamelize($modelName);
-		return Text::camelize($unCamelize);
+		return Text::camelize(Text::uncamelize($modelName));
 	}
 }
