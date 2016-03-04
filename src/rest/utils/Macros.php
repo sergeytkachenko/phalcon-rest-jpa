@@ -14,6 +14,7 @@ class Macros extends Text
 	 */
 	public static function replace($string, $params) {
 		foreach (self::getMacrosMethods() as $macros => $method) {
+			if (!preg_match('/'. $macros . '/', $string)) {continue;}
 			$replacement = self::$method($string, $params);
 			return $replacement;
 		}

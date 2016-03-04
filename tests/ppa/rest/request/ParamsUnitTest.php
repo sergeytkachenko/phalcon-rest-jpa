@@ -9,6 +9,7 @@ class ParamsUnitTest extends \UnitTestCase
 	static $crud = array(
 		'/ppa/s/targetGroup/findById' => array('id' => 1),
 		'/ppa/s/targetGroup/search' => array('search' => 'searchValue'),
+		'/ppa/s/targetGroup' => array(),
 		'/ppa/s/targetGroup/findByTitleContaining' => array('title' => 'titleValue'),
 		'/ppa/s/targetGroup/findByTitleLike' => array('title' => 'titleValue'),
 		'/ppa/s/targetGroup/findByTitleStartingWith' => array('title' => 'titleValue'),
@@ -17,6 +18,7 @@ class ParamsUnitTest extends \UnitTestCase
 	static $expected = array(
 		'/ppa/s/targetGroup/findById' => array('id' => 1),
 		'/ppa/s/targetGroup/search' => array('search' => '%searchValue%'),
+		'/ppa/s/targetGroup' => array(),
 		'/ppa/s/targetGroup/findByTitleContaining' => array('title' => '%titleValue%'),
 		'/ppa/s/targetGroup/findByTitleLike' => array('title' => 'titleValue'),
 		'/ppa/s/targetGroup/findByTitleStartingWith' => array('title' => 'titleValue%')
