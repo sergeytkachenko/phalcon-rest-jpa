@@ -63,7 +63,7 @@ class Macros extends Text
 	 * @param $modelName
 	 * @return array
 	 */
-	private function getModelColumns($modelName) {
+	private static function getModelColumns($modelName) {
 		/**
 		 * @var \Phalcon\Mvc\Model $model
 		 */
