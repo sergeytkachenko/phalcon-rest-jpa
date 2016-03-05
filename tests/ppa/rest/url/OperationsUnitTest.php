@@ -4,6 +4,7 @@ namespace Test\Ppa\Rest\Url;
 
 use PPA\Rest\Column\Portion;
 use PPA\Rest\Url\Operations;
+use PPA\Rest\Utils\Text;
 
 class OperationsUnitTest extends \UnitTestCase
 {
@@ -28,7 +29,7 @@ class OperationsUnitTest extends \UnitTestCase
 				$sql = Operations::getTextSqlOperation(new Portion($conditionPortion));
 				$this->assertEquals(
 					$sql,
-					$param . ' LIKE :'. $param . ':',
+					Text::uncamelize($param) . ' LIKE :'. $param . ':',
 					'getTextSqlOperation create expected sql text'
 				);
 			}
@@ -43,7 +44,7 @@ class OperationsUnitTest extends \UnitTestCase
 				$sql = Operations::getTextSqlOperation(new Portion($conditionPortion));
 				$this->assertEquals(
 					$sql,
-					$param . ' LIKE :'. $param . ':',
+					Text::uncamelize($param) . ' LIKE :'. $param . ':',
 					'getTextSqlOperation create expected sql text'
 				);
 			}

@@ -194,8 +194,9 @@ abstract class Operations
 	 * @return string
 	 */
 	public static function getLike(Portion $portion) {
-		$columnName = $portion->getColumnName();
-		return $columnName . ' LIKE :' . $columnName . ':';
+		$columnName = self::getColumnName($portion);
+		$columnValue = self::getColumnValue($portion);
+		return $columnName . ' LIKE :' . $columnValue . ':';
 	}
 
 	/**
@@ -261,7 +262,8 @@ abstract class Operations
 	 */
 	public static function getDefault(Portion $portion) {
 		$columnName = $portion->getColumnName();
-		return $columnName . ' = :' . $columnName . ':';
+		$columnValue = self::getColumnValue($portion);
+		return $columnName . ' = :' . $columnValue . ':';
 	}
 
 	/**
@@ -270,5 +272,14 @@ abstract class Operations
 	 */
 	public static function getDefaultParam($value) {
 		return $value;
+	}
+
+	private static function getColumnName(Portion $portion) {
+		$columnName = $portion->getColumnName();
+		return Text::uncamelize($columnName);
+	}
+
+	private static function getColumnValue(Portion $portion) {
+		return $portion->getColumnName();
 	}
 }
