@@ -76,7 +76,7 @@ abstract class Operators
 		$builder->from($modelName);
 		$prepareUrl = self::getPrepareUrlOperators($fullUrl);
 		$whereSql = self::buildWhere($prepareUrl);
-		$whereSqlReplacement = Macros::replace($whereSql, $params);
+		$whereSqlReplacement = Macros::replace($whereSql, $params, $modelName);
 		$builder->where($whereSqlReplacement);
 
 		$params = new Params($fullUrl, $params);
@@ -90,6 +90,7 @@ abstract class Operators
 	/**
 	 * @param string $preparedUrlWithoutAnd
 	 * @return string
+	 *
 	 */
 	private static function buildOR($preparedUrlWithoutAnd) {
 		$conditions = array();

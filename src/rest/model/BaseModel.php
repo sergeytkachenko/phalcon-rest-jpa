@@ -100,4 +100,5 @@ trait BaseModel
 		$this->assign($data);
 		return $this->save($data);
 	}
+
 }
