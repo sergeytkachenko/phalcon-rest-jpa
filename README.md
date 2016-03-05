@@ -18,10 +18,11 @@
 | *Fetch first* | /api/ppa/brands/  | Вернет первый, попавшийся бренд |
 | *And* | /api/ppa/brands/findByIdAndTitle  | <pre>… where x.id = :id: AND x.title = :title:</pre> |
 | *Or* | /api/ppa/brands/findByIdOrTitle | <pre>… where x.id = :id: OR x.title = :title:</pre>  |
-| *Like* | /api/ppa/clients/findByLastNameLikeOrNameLike | <pre>… where x.lastName LIKE :lastName: OR x.name LIKE :name:</pre>  |
+| *Like* | /api/ppa/clients/findByNameLike | <pre>… where x.name LIKE :name:</pre>  |
 | *Containing* | /api/ppa/clients/findByTitleContaining | <pre>… where x.title LIKE :lastName: (where :lastName: =  %lastName%)</pre>  |
 | *StartingWith* | /api/ppa/clients/findByTitleStartingWith | <pre>… where x.title LIKE :lastName: (where :lastName:  = lastName%)</pre>  |
-
+| *search* (without columns)| /api/ppa/clients/search | <pre>… where x.* LIKE :lastName: (where :lastName:  = %lastName%)</pre>  |
+| *search* (with columns) | /api/ppa/clients/search | <pre>… where x.column1 LIKE :lastName: OR .column2 LIKE :lastName: и тд..</pre>  |
 <pre>
 Передаваемые параметры должны быть переданы в camelCase
 /api/ppa/findByIdAndTitleOrOldId?oldId=693&id=1&title=chery
