@@ -2,6 +2,7 @@
 
 use Phalcon\Di;
 use Phalcon\Di\FactoryDefault;
+use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 
 ini_set('display_errors',1);
 error_reporting(E_ALL);
@@ -17,6 +18,7 @@ set_include_path(
 
 // требуется для phalcon/incubator
 include __DIR__ . "/../vendor/autoload.php";
+include 'models/TestModel.php';
 
 // Используем автозагрузчик приложений для автозагрузки классов.
 // Автозагрузка зависимостей, найденных в composer.
@@ -34,6 +36,14 @@ $loader->register();
 $di = new FactoryDefault();
 Di::reset();
 
-// здесь можно добавить любые необходимые сервисы в контейнер зависимостей
+$di->set('db', function () {
+	return new DbAdapter(array(
+		'host'     => 'localhost',
+		'username' => 'root',
+		'password' => '1665017',
+		'dbname'   => 'phalcon-rest-jpa',
+		"charset"  => 'utf8'
+	));
+});
 
 Di::setDefault($di);

@@ -2,6 +2,7 @@
 
 namespace PPA\Rest\Url;
 
+use Phalcon\Di;
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Mvc\Model\Query\Builder;
 use PPA\Rest\Column\Portion;
@@ -59,22 +60,32 @@ abstract class Operators
 	/**
 	 * @param string $fullUrl Full url.
 	 * @param array $params
-	 * @return Builder
+	 * @return \Phalcon\Mvc\Model\Query
 	 */
 	public static function buildQuery($fullUrl, array $params = array()) {
-		$params = new Params($fullUrl, $params);
-		$params = $params->getPrepareParams();
+		/**
+		 * @var \Phalcon\Di $di
+		 */
+		global $di;
 		/**
 		 * @var \Phalcon\Mvc\Model $modelName
 		 */
-		$modelName = Text::camelize(Analyzer::getModelName($fullUrl));
-		$builder = new Builder($params);
+		$modelName = Text::camelize(Text::uncamelize(Analyzer::getModelName($fullUrl)));
+		$builder = new Builder();
+		$builder->setDI($di);
 		$builder->from($modelName);
 		$prepareUrl = self::getPrepareUrlOperators($fullUrl);
 		$whereSql = self::buildWhere($prepareUrl);
 		$whereSqlReplacement = Macros::replace($whereSql, $params);
 		$builder->where($whereSqlReplacement);
-		return $builder;
+
+		$params = new Params($fullUrl, $params);
+		$params = $params->getPrepareParams();
+
+		$query = $builder->getQuery();
+		$query->setBindParams($params);
+
+		return $query;
 	}
 
 	/**

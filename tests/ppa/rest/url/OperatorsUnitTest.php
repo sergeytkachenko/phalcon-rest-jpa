@@ -2,6 +2,10 @@
 
 namespace Test\Ppa\Rest\Url;
 
+use Phalcon\Db\Adapter\Pdo\Mysql;
+use Phalcon\Di;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Mvc\Model\Manager as ModelsManager;
 use PPA\Rest\Url\Operators;
 
 class OperatorsUnitTest extends \UnitTestCase
@@ -10,37 +14,80 @@ class OperatorsUnitTest extends \UnitTestCase
 		'findByTitleAndPrimaryColumn' => 'Title|PrimaryColumn',
 		'findByLastName' => 'LastName',
 		'findByTitleAndPrimaryColumnOrName' => 'Title|PrimaryColumn-Name',
-		'/ppa/s/model/findByTitleAndPrimaryColumnOrName' => 'Title|PrimaryColumn-Name',
-		'/api/ppa/s/model/search' => 'search'
+		'/ppa/s/testModel/findByTitleAndPrimaryColumnOrName' => 'Title|PrimaryColumn-Name',
+		'/api/ppa/s/testModel/search' => 'search'
 	);
 
 	static $whereUrls = array(
 		/**
 		 * Default
 		 */
-		'/api/ppa/s/model/findByTitleAndPrimaryColumn' => '(title = :title:) AND (primaryColumn = :primaryColumn:)',
-		'/api/ppa/model/findByLastName' => 'lastName = :lastName:',
-		'/api/ppa/s/model/findByTitleAndPrimaryColumnOrName'
+		'/api/ppa/s/testModel/findByTitleAndLastName' => '(title = :title:) AND (lastName = :lastName:)',
+		'/api/ppa/testModel/findByLastName' => 'lastName = :lastName:',
+		'/api/ppa/s/testModel/findByTitleAndPrimaryColumnOrName'
 			=> '(title = :title:) AND (primaryColumn = :primaryColumn: OR name = :name:)',
-		'/ppa/s/model/findByTitleAndPrimaryColumnOrName'
+		'/ppa/s/testModel/findByTitleAndPrimaryColumnOrName'
 			=> '(title = :title:) AND (primaryColumn = :primaryColumn: OR name = :name:)',
 
 		/**
 		 * Like
 		 */
-		'/api/ppa/model/findByNameLike' => 'name LIKE :name:',
-		'/api/ppa/model/findByNameLikeOrTitleLike' => 'name LIKE :name: OR title LIKE :title:',
-		'/api/ppa/model/findByNameLikeAndTitleLike' => '(name LIKE :name:) AND (title LIKE :title:)',
+		'/api/ppa/testModel/findByNameLike' => 'name LIKE :name:',
+		'/api/ppa/testModel/findByNameLikeOrTitleLike' => 'name LIKE :name: OR title LIKE :title:',
+		'/api/ppa/testModel/findByNameLikeAndTitleLike' => '(name LIKE :name:) AND (title LIKE :title:)',
 
 		/**
 		 * StartingWith
 		 */
-		'/api/ppa/model/findByNameStartingWithAndTitleStartingWith' => '(name LIKE :name:) AND (title LIKE :title:)',
+		'/api/ppa/testModel/findByTitleStartingWithAndTitleStartingWith' => '(title LIKE :title:) AND (title LIKE :title:)',
 
 		/**
 		 * Search
 		 */
-		'/api/ppa/s/model/search' => 'MATCH(`a`,`b`) AGAINST (:search:)'
+		'/api/ppa/s/testModel/search' => 'MATCH(`title`,`lastName`) AGAINST (:search:)'
+	);
+
+	static $expectedUrls = array(
+		'/api/ppa/s/testModel/findByTitleAndLastName' => array(
+			'params' => array(
+				'title' => 'title',
+				'lastName' => 'lastName'
+			),
+			'prepareParams' => array(
+				'title' => 'title',
+				'lastName' => 'lastName'
+			),
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE (`test_model`.`title` = :title) AND (`test_model`.`lastName` = :lastName)"
+		),
+		'/api/ppa/s/testModel/findByTitleLike' => array(
+			'params' => array(
+				'title' => 'title'
+			),
+			'prepareParams' => array(
+				'title' => 'title'
+			),
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE `test_model`.`title` LIKE :title"
+		),
+		'/api/ppa/s/testModel/findByTitleStartingWith' => array(
+			'params' => array(
+				'title' => 'title'
+			),
+			'prepareParams' => array(
+				'title' => 'title%'
+			),
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE `test_model`.`title` LIKE :title"
+		),
+		'/api/ppa/s/testModel/search' => array(
+			'params' => array(
+				'search' => 'searchValue',
+				'columns' => array('title', 'lastName')
+			),
+			'prepareParams' => array(
+				'search' => '%searchValue%',
+				'columns' => array('title', 'lastName')
+			),
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE MATCH(`test_model`.`title`, `test_model`.`lastName`) AGAINST (:search)"
+		)
 	);
 
 	public function testGetPrepareUrlOperators() {
@@ -51,10 +98,10 @@ class OperatorsUnitTest extends \UnitTestCase
 	}
 
 	public function testBuild() {
-		foreach (self::$whereUrls as $url => $expected) {
-			$builder = Operators::buildQuery($url, array('columns' => array('a', 'b')));
-			$this->assertEquals($builder->getWhere(), $expected, '$builder->getWhere() returns expected value');
-			$this->assertEquals($builder->getFrom(), 'Model', '$builder->getFrom() returns expected value');
+		foreach (self::$expectedUrls as $url => $expected) {
+			$query = Operators::buildQuery($url, $expected['params']);
+			$this->assertEquals($query->getSql()['sql'], $expected['sql'], '$query->getSql() returns expected value');
+			$this->assertEquals($query->getBindParams(), $expected['prepareParams'], '$query->getBindParams() returns expected value');
 		}
 	}
 }

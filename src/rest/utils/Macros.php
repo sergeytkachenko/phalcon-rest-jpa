@@ -39,7 +39,7 @@ class Macros extends Text
 		if (!isset($params['columns'])) {
 			throw new InvalidArgumentException('param "columns" mast be required');
 		}
-		$columns = array_map(function($val) {return '`' . $val . '`';}, $params['columns']);
+		$columns = array_map(function($val) {return $val;}, $params['columns']);
 		$columns = implode(',', $columns);
 		return preg_replace('/{columns}/', $columns, $string);
 	}
