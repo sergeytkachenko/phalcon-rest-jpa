@@ -261,7 +261,7 @@ abstract class Operations
 	 * @return string
 	 */
 	public static function getDefault(Portion $portion) {
-		$columnName = $portion->getColumnName();
+		$columnName = self::getColumnName($portion);
 		$columnValue = self::getColumnValue($portion);
 		return $columnName . ' = :' . $columnValue . ':';
 	}

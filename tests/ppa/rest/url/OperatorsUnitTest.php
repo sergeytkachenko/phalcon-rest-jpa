@@ -22,12 +22,12 @@ class OperatorsUnitTest extends \UnitTestCase
 		/**
 		 * Default
 		 */
-		'/api/ppa/s/testModel/findByTitleAndLastName' => '(title = :title:) AND (lastName = :lastName:)',
-		'/api/ppa/testModel/findByLastName' => 'lastName = :lastName:',
+		'/api/ppa/s/testModel/findByTitleAndLastName' => '(title = :title:) AND (last_name = :lastName:)',
+		'/api/ppa/testModel/findByLastName' => 'last_name = :lastName:',
 		'/api/ppa/s/testModel/findByTitleAndPrimaryColumnOrName'
-			=> '(title = :title:) AND (primaryColumn = :primaryColumn: OR name = :name:)',
+			=> '(title = :title:) AND (primary_column = :primaryColumn: OR name = :name:)',
 		'/ppa/s/testModel/findByTitleAndPrimaryColumnOrName'
-			=> '(title = :title:) AND (primaryColumn = :primaryColumn: OR name = :name:)',
+			=> '(title = :title:) AND (primary_column = :primaryColumn: OR name = :name:)',
 
 		/**
 		 * Like
@@ -44,7 +44,7 @@ class OperatorsUnitTest extends \UnitTestCase
 		/**
 		 * Search
 		 */
-		'/api/ppa/s/testModel/search' => 'MATCH(`title`,`lastName`) AGAINST (:search:)'
+		'/api/ppa/s/testModel/search' => 'MATCH(`title`,`last_name`) AGAINST (:search:)'
 	);
 
 	static $expectedUrls = array(
@@ -57,7 +57,7 @@ class OperatorsUnitTest extends \UnitTestCase
 				'title' => 'title',
 				'lastName' => 'lastName'
 			),
-			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE (`test_model`.`title` = :title) AND (`test_model`.`lastName` = :lastName)"
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`last_name` FROM `test_model` WHERE (`test_model`.`title` = :title) AND (`test_model`.`last_name` = :lastName)"
 		),
 		'/api/ppa/s/testModel/findByTitleLike' => array(
 			'params' => array(
@@ -66,7 +66,7 @@ class OperatorsUnitTest extends \UnitTestCase
 			'prepareParams' => array(
 				'title' => 'title'
 			),
-			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE `test_model`.`title` LIKE :title"
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`last_name` FROM `test_model` WHERE `test_model`.`title` LIKE :title"
 		),
 		'/api/ppa/s/testModel/findByTitleStartingWith' => array(
 			'params' => array(
@@ -76,7 +76,7 @@ class OperatorsUnitTest extends \UnitTestCase
 			'prepareParams' => array(
 				'title' => 'title%'
 			),
-			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE `test_model`.`title` LIKE :title"
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`last_name` FROM `test_model` WHERE `test_model`.`title` LIKE :title"
 		),
 		'/api/ppa/s/testModel/search' => array(
 			'params' => array(
@@ -86,7 +86,7 @@ class OperatorsUnitTest extends \UnitTestCase
 			'prepareParams' => array(
 				'search' => '%searchValue%'
 			),
-			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE `test_model`.`title` LIKE :search OR `test_model`.`lastName` LIKE :search"
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`last_name` FROM `test_model` WHERE `test_model`.`title` LIKE :search OR `test_model`.`last_name` LIKE :search"
 		)
 	);
 

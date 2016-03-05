@@ -78,7 +78,6 @@ abstract class Operators
 		$whereSql = self::buildWhere($prepareUrl);
 		$whereSqlReplacement = Macros::replace($whereSql, $params, $modelName);
 		$builder->where($whereSqlReplacement);
-
 		$params = new Params($fullUrl, $params);
 		$params = $params->getPrepareParams();
 		$query = $builder->getQuery();

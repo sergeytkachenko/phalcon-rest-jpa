@@ -40,6 +40,7 @@ class Macros extends Text
 	 */
 	private static function replaceColumns($string, array $params, $modelName) {
 		$columns = isset($params['columns']) ? $params['columns'] : self::getModelColumns($modelName);
+		$columns = array_map('Text::uncamelize', $columns);
 		$columns = implode(',', $columns);
 		return preg_replace('/{columns}/', $columns, $string);
 	}
@@ -53,7 +54,7 @@ class Macros extends Text
 	private static function replaceColumnsLikes($string, array $params, $modelName) {
 		$columns = isset($params['columns']) ? $params['columns'] : self::getModelColumns($modelName);
 		$columns = array_map(function($column) {
-			return $column . ' LIKE :search:';
+			return Text::uncamelize($column) . ' LIKE :search:';
 		}, $columns);
 		$columns = implode(' OR ', $columns);
 		return preg_replace('/{columns likes}/', $columns, $string);
