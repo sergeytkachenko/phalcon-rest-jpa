@@ -25,8 +25,8 @@ class PpaController extends JsonController
 		$isOnlyFirst = !PPACriteria::hasMany($url);
 		$isFetchRelations = array_key_exists('fetchRelations', $params);
 
-		$builder = Operators::buildQuery($url, $params);
-		$data = $builder->getQuery()->execute();
+		$query = Operators::buildQuery($url, $params);
+		$data = $query->execute();
 
 		//$data = PPACriteria::fetch($url, $params);
 		if (!$data) {return array();}
