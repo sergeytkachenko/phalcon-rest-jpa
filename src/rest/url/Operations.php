@@ -227,8 +227,8 @@ abstract class Operations
 	 * @param string $defaultColumnSearch
 	 * @return string
 	 */
-	public static function getSearch(Portion $portion, $defaultColumnSearch = 'search') {
-		return 'MATCH({columns}) AGAINST (:' . $defaultColumnSearch . ':)';
+	public static function getSearch(Portion $portion) {
+		return '{columns likes}';
 	}
 
 	/**

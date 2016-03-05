@@ -26,7 +26,8 @@ class Macros extends Text
 	 */
 	private static function getMacrosMethods() {
 		return array(
-			'{columns}' => 'replaceColumns'
+			'{columns}' => 'replaceColumns',
+			'{columns likes}' => 'replaceColumnsLikes'
 		);
 	}
 
@@ -39,8 +40,24 @@ class Macros extends Text
 		if (!isset($params['columns'])) {
 			throw new InvalidArgumentException('param "columns" mast be required');
 		}
-		$columns = array_map(function($val) {return $val;}, $params['columns']);
+		$columns = $params['columns'];
 		$columns = implode(',', $columns);
 		return preg_replace('/{columns}/', $columns, $string);
+	}
+
+	/**
+	 * @param string $string
+	 * @param array $params
+	 * @return string
+	 */
+	private static function replaceColumnsLikes($string, array $params) {
+		if (!isset($params['columns'])) {
+			throw new InvalidArgumentException('param "columns" mast be required');
+		}
+		$columns = array_map(function($column) {
+			return $column . ' LIKE :search:';
+		}, $params['columns']);
+		$columns = implode(' OR ', $columns);
+		return preg_replace('/{columns likes}/', $columns, $string);
 	}
 }

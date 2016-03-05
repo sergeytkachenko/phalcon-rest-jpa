@@ -21,6 +21,11 @@ class Params
 	private $params;
 
 	/**
+	 * @var array $bindParams Params for bind executed value in query.
+	 */
+	private $bindParams = array();
+
+	/**
 	 * @var array[string]\PPA\Rest\Column\Portion $paramsPortion
 	 */
 	private $paramsPortion = array();
@@ -73,11 +78,14 @@ class Params
 		return false;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getPrepareParams() {
 		foreach ($this->paramsPortion as $key => $portion) {
 			$value = Operations::getPrepareParam($portion, $this->params[$key]);
-			$this->params[$key] = $value;
+			$this->bindParams[$key] = $value;
 		}
-		return $this->params;
+		return $this->bindParams;
 	}
 }

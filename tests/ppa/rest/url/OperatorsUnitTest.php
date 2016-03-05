@@ -70,7 +70,8 @@ class OperatorsUnitTest extends \UnitTestCase
 		),
 		'/api/ppa/s/testModel/findByTitleStartingWith' => array(
 			'params' => array(
-				'title' => 'title'
+				'title' => 'title',
+				'extraParam' => 'value'
 			),
 			'prepareParams' => array(
 				'title' => 'title%'
@@ -83,10 +84,9 @@ class OperatorsUnitTest extends \UnitTestCase
 				'columns' => array('title', 'lastName')
 			),
 			'prepareParams' => array(
-				'search' => '%searchValue%',
-				'columns' => array('title', 'lastName')
+				'search' => '%searchValue%'
 			),
-			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE MATCH(`test_model`.`title`, `test_model`.`lastName`) AGAINST (:search)"
+			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`lastName` FROM `test_model` WHERE `test_model`.`title` LIKE :search OR `test_model`.`lastName` LIKE :search"
 		)
 	);
 
@@ -100,6 +100,7 @@ class OperatorsUnitTest extends \UnitTestCase
 	public function testBuild() {
 		foreach (self::$expectedUrls as $url => $expected) {
 			$query = Operators::buildQuery($url, $expected['params']);
+			$query->execute();
 			$this->assertEquals($query->getSql()['sql'], $expected['sql'], '$query->getSql() returns expected value');
 			$this->assertEquals($query->getBindParams(), $expected['prepareParams'], '$query->getBindParams() returns expected value');
 		}

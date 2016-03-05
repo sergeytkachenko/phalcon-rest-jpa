@@ -81,7 +81,6 @@ abstract class Operators
 
 		$params = new Params($fullUrl, $params);
 		$params = $params->getPrepareParams();
-
 		$query = $builder->getQuery();
 		$query->setBindParams($params);
 
