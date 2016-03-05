@@ -55,7 +55,7 @@ class ParamsUnitTest extends \UnitTestCase
 	 * @param $request
 	 */
 	public function testGetParams($request) {
-		$params = Params::getParams($request);
+		$params = Params::getMergeParams($request);
 		$this->assertNotEmpty($params, 'params not empty');
 		$this->assertArrayHasKey('id', $params, 'params has id key');
 		$this->assertArrayHasKey('model', $params, 'params has model key');

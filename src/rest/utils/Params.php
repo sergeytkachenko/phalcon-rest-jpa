@@ -11,7 +11,7 @@ abstract class Params
 	 * @return array All relations, that send to request.
 	 */
 	public static function getRelations(Request $request) {
-		$params = self::getParams($request);
+		$params = self::getMergeParams($request);
 		if (isset($params['relations']) and is_array($params['relations'])) {
 			return $params['relations'];
 		}
@@ -37,7 +37,7 @@ abstract class Params
 	 * @param \Phalcon\Http\Request $request
 	 * @return array All request params (GET, POST, PUT, RawJsonBody)
 	 */
-	public static function getParams(Request $request) {
+	public static function getMergeParams(Request $request) {
 		$jsonRawBody = (array)$request->getJsonRawBody(true);
 		return array_merge((array)$request->get(), (array)$request->getPost(), (array)$request->getPut(), $jsonRawBody);
 	}

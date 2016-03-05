@@ -21,14 +21,14 @@ class PpaController extends JsonController
 		if (Analyzer::isDeleting($url)) {
 			return $this->delete();
 		}
-		$params = Params::getParams($this->request);
-		$isOnlyFirst = !PPACriteria::hasMany($url);
-		$isFetchRelations = array_key_exists('fetchRelations', $params);
+		$params = Params::getMergeParams($this->request);
 
 		$query = Operators::buildQuery($url, $params);
 		$data = $query->execute();
 
-		//$data = PPACriteria::fetch($url, $params);
+		$isOnlyFirst = !Analyzer::hasMany($url);
+		$isFetchRelations = array_key_exists('fetchRelations', $params);
+
 		if (!$data) {return array();}
 		if ($isOnlyFirst) {
 			$data = $data->getFirst();

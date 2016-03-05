@@ -46,4 +46,12 @@ abstract class Analyzer
 		$modelName = preg_replace('/.*ppa\/(s\/)?([a-zA-Z0-9]+).*/', '$2', $url);
 		return Text::camelize(Text::uncamelize($modelName));
 	}
+
+	/**
+	 * @param $url
+	 * @return bool
+	 */
+	public static function hasMany($url) {
+		return (bool) preg_match('/\/s\//', $url);
+	}
 }
