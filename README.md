@@ -19,6 +19,7 @@
 | *And* | /api/ppa/brands/findByIdAndTitle  | <pre>… where x.id = :id: AND x.title = :title:</pre> |
 | *Or* | /api/ppa/brands/findByIdOrTitle | <pre>… where x.id = :id: OR x.title = :title:</pre>  |
 | *Like* | /api/ppa/clients/findByLastNameLikeOrNameLike | <pre>… where x.lastName LIKE :lastName: OR x.name LIKE :name:</pre>  |
+| *Containing* | /api/ppa/clients/findByTitleContaining | <pre>… where x.title LIKE :lastName: (where :lastName: будет обернуто в %)</pre>  |
 
 <pre>
 Передаваемые параметры должны быть переданы в camelCase и методом GET
