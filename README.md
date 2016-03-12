@@ -1,7 +1,10 @@
 # phalcon-rest-jpa
 
+![alt tag](http://stkachenko.org.ua/wp-content/uploads/2016/03/ppa.png)
 
 Данный REST подход основываеться на описаной документации *Java Spring JPA REST* http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation
+
+###Примеры использования - http://stkachenko.org.ua/?p=865###
 
 Смысл данной библиотеки очень прост - pеализовать полный доступ к CRUD операциям основываясь на построении запросов в url строке.
 
