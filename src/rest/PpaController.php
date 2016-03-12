@@ -48,7 +48,7 @@ class PpaController extends JsonController
 	 * @return array
 	 */
 	private function save() {
-		$params = Params::getParams($this->request);
+		$params = Params::getMergeParams($this->request);
 		$id = intval(@$params['id']);
 		$modelName = Analyzer::getModelName($this->request->get('_url'));
 		if ($id) {
@@ -150,7 +150,7 @@ class PpaController extends JsonController
 	 * @return array
 	 */
 	private function delete() {
-		$params = Params::getParams($this->request);
+		$params = Params::getMergeParams($this->request);
 		if (empty($params['id'])) {
 			return array(
 				'success' => false,
