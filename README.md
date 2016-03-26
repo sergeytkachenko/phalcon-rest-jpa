@@ -88,3 +88,5 @@ public function initialize()
 }
 ```
 В результате такаго запроса обновиться сущность *targetGroups*, у которой id = 1. А также ее связи **ActivitiesTargetGroups** и **BrandsTargetGroups**. Причем связь BrandsTargetGroups полностью очиститься. 
+
+##Для выбора связанных записей один ко многим передайте параметр joinedRelations##
