@@ -1,7 +1,6 @@
 <?
 namespace PPA\Rest;
 
-use Phalcon\Exception;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use PPA\Rest\Url\Analyzer;
@@ -11,22 +10,26 @@ use PPA\Rest\Utils\Params;
 class PpaController extends JsonController
 {
 	public function crudAction() {
-		$url = $this->request->get('_url');
-		if (!$url) {
-			throw new Exception('_url is mast specific');
-		}
-		if (Analyzer::isSaving($url)) {
-			return $this->save();
-		}
-		if (Analyzer::isDeleting($url)) {
-			return $this->delete();
-		}
-		$params = Params::getMergeParams($this->request);
+		try {
+			$url = $this->request->get('_url');
+			if (!$url) {
+				throw new \PPA\Rest\Exception('_url is mast specific');
+			}
+			if (Analyzer::isSaving($url)) {
+				return $this->save();
+			}
+			if (Analyzer::isDeleting($url)) {
+				return $this->delete();
+			}
+			$params = Params::getMergeParams($this->request);
 
-		$query = Operators::buildQuery($url, $params);
-		$data = $query->execute();
-		if (!$data) {return array();}
-		return $this->getFinallyFullData($data, $params, $url);
+			$query = Operators::buildQuery($url, $params);
+			$data = $query->execute();
+			if (!$data) {return array();}
+			return $this->getFinallyFullData($data, $params, $url);
+		} catch (\PPA\Rest\Exception $e) {
+			debug($e);
+		}
 	}
 
 	/**

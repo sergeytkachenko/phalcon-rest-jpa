@@ -54,7 +54,7 @@ trait BaseModel
 	/**
 	 * Выбирает связанные записи и подгружает их в $this->joinedRelations.
 	 * В отличии от fetchRelations выюирает значение сущностей "один ко многим".
-	 * @throws Exception
+	 * @throws \PPA\Rest\Exception
 	 */
 	public function joinedRelations() {
 		$relations = $this->getRelations();
@@ -69,7 +69,7 @@ trait BaseModel
 	 * Генерирует исключение, в случае если в модели не указан ключ связи для подгрузки связанной записи.
 	 * @param \Phalcon\Mvc\Model\Relation $relation
 	 * @return $this|void
-	 * @throws Exception
+	 * @throws \PPA\Rest\Exception
 	 */
 	public function joinedRelation($relation) {
 		$keyField = $relation->getOption(self::$referencesKeyOption);
@@ -82,7 +82,7 @@ trait BaseModel
 				break;
 			case 2: // HasMany
 				if (!$keyField) {
-					throw new Exception('If can use joinedRelation, you need to set '
+					throw new \PPA\Rest\Exception('If can use joinedRelation, you need to set '
 						. self::$referencesKeyOption . ' of relation ' . $relationAlias
 						. ' in model ' . get_class($this));
 				}
@@ -90,7 +90,7 @@ trait BaseModel
 				break;
 			case 1: // HasManyToMany
 				if (!$keyField) {return;}
-				throw new Exception('Sorry, relations with type HasManyToMany is not have implementations');
+				throw new \PPA\Rest\Exception('Sorry, relations with type HasManyToMany is not have implementations');
 				break;
 		}
 		return $this;
