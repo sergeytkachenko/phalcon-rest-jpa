@@ -3,8 +3,8 @@ namespace PPA\Rest;
 
 use Phalcon\Exception;
 use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\Model\ResultsetInterface;
 use PPA\Rest\Url\Analyzer;
-use PPA\Rest\Url\Operations;
 use PPA\Rest\Url\Operators;
 use PPA\Rest\Utils\Params;
 
@@ -25,22 +25,43 @@ class PpaController extends JsonController
 
 		$query = Operators::buildQuery($url, $params);
 		$data = $query->execute();
-
-		$isOnlyFirst = !Analyzer::hasMany($url);
-		$isFetchRelations = array_key_exists('fetchRelations', $params);
-
 		if (!$data) {return array();}
+		return $this->getFinallyFullData($data, $params, $url);
+	}
+
+	/**
+	 * @param ResultsetInterface $data
+	 * @param array $params
+	 * @param $url
+	 * @return array
+	 */
+	private function getFinallyFullData(ResultsetInterface $data, array $params, $url) {
+		$isOnlyFirst = !Analyzer::hasMany($url);
+		$isFetchRelations = \PPA\Rest\Request\Params::isNeedFetchRelations($params);
+		$isJoinedRelations = \PPA\Rest\Request\Params::isNeedJoinedRelations($params);
 		if ($isOnlyFirst) {
+			/**
+			 * @var \Phalcon\Mvc\Model $data
+			 */
 			$data = $data->getFirst();
-			if(!$data) {return array();}
-			return $isFetchRelations ? $data->fetchRelations()->toArrayRelations() : $data->toArray();
+			if (!$data) {return array();}
+			if ($isFetchRelations) {
+				return $data->fetchRelations()->toArrayRelations();
+			}
+			if ($isJoinedRelations) {
+				return $data->joinedRelations()->toArrayRelations();
+			}
+			return $data->toArray();
 		}
-		if ($isFetchRelations) {
-			return $data->filter(function($model) {
+		return $data->filter(function($model) use ($isFetchRelations, $isJoinedRelations) {
+			if ($isFetchRelations) {
 				return $model->fetchRelations();
-			});
-		}
-		return $data->toArray();
+			}
+			if ($isJoinedRelations) {
+				return $model->joinedRelations();
+			}
+			return $model;
+		});
 	}
 
 	/**

@@ -1,5 +1,4 @@
 <?php
-
 namespace PPA\Rest\Request;
 
 use InvalidArgumentException;
@@ -36,8 +35,7 @@ class Params
 	 * @param string $fullUrl
 	 * @param array $params
 	 */
-	public function __construct($fullUrl, array $params)
-	{
+	public function __construct($fullUrl, array $params) {
 		$this->fullUrl = $fullUrl;
 		$this->params = $params;
 		$this->initParamsPortion($params);
@@ -50,7 +48,7 @@ class Params
 		$preparedUrl = Operators::getPrepareUrlOperators($this->fullUrl);
 		$andList = array_filter(explode('|', $preparedUrl));
 		foreach ($andList as $and) {
-			$orList  = array_filter(explode('-', $and));
+			$orList = array_filter(explode('-', $and));
 			foreach ($orList as $or) {
 				$paramKey = $this->findKeyParamByPortionString($params, $or);
 				if ($paramKey === false) {
@@ -87,5 +85,23 @@ class Params
 			$this->bindParams[$key] = $value;
 		}
 		return $this->bindParams;
+	}
+
+	/**
+	 * If need fetch simple relations.
+	 * @param array $params
+	 * @return bool
+	 */
+	public static function isNeedFetchRelations(array $params) {
+		return array_key_exists('fetchRelations', $params);
+	}
+
+	/**
+	 * If need load relation by fetched relations.
+	 * @param array $params
+	 * @return bool
+	 */
+	public static function isNeedJoinedRelations(array $params) {
+		return array_key_exists('joinedRelations', $params);
 	}
 }

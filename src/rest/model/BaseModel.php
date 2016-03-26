@@ -6,7 +6,7 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * Class BaseModel
- * Служит базовым вспомагательным "класом" для потдержки общих методов моделей
+ * Служит базовым вспомагательным "класом" для потдержки общих методов моделей.
  */
 trait BaseModel
 {
@@ -16,12 +16,20 @@ trait BaseModel
 	 * @var array
 	 */
 	public $relations = array();
+	/**
+	 * тут храниться массив связей, который наполняется при вызове метода ->joinedRelations
+	 * @var array
+	 */
 	public $joinedRelations = array();
+	/**
+	 * Название ключа, по котору происходит подгрузка связанной записи для joinedRelations.
+	 * @var string
+	 */
 	public static $referencesKeyOption = 'key';
 
 	/**
 	 * Returns all relations of model.
-	 * @return Relation[]
+	 * @return Relation[] Все связи модели.
 	 */
 	public function getRelations() {
 		return $this->getModelsManager()->getRelations(get_class($this));
@@ -29,7 +37,9 @@ trait BaseModel
 
 	/**
 	 * Подгружает все связанные свойства из других таблиц и ложит все связи в свойство $this->relations
-	 * Очень удобно когда вам нужно выбрать один методом сущность, а также все ее связи
+	 * Очень удобно когда вам нужно выбрать один методом сущность, а также все ее связи.
+	 * Данный метод не подгружает значения связей "один ко многим" и "многие ко многим", если вам нужно загрузить
+	 *  содержимое таких связей используйте BaseModel->joinedRelations.
 	 * @param bool $isConvertToArray
 	 * @return $this
 	 */
@@ -42,6 +52,8 @@ trait BaseModel
 	}
 
 	/**
+	 * Выбирает связанные записи и подгружает их в $this->joinedRelations.
+	 * В отличии от fetchRelations выюирает значение сущностей "один ко многим".
 	 * @throws Exception
 	 */
 	public function joinedRelations() {
@@ -52,7 +64,10 @@ trait BaseModel
 	}
 
 	/**
+	 * Выбирает связанную запись и подгружает ee в $this->joinedRelations.
+	 * Генерирует исключение, в случае если в модели не указан ключ связи для подгрузки связанной записи.
 	 * @param \Phalcon\Mvc\Model\Relation $relation
+	 * @return $this|void
 	 * @throws Exception
 	 */
 	public function joinedRelation($relation) {
@@ -77,9 +92,11 @@ trait BaseModel
 				throw new Exception('Sorry, relations with type HasManyToMany is not have implementations');
 				break;
 		}
+		return $this;
 	}
 
 	/**
+	 * Выбирает связанную запись и подгружает ee в $this->joinedRelations.
 	 * @param \Phalcon\Mvc\Model $relationModel
 	 * @param string $relationAlias
 	 * @return \Phalcon\Mvc\Model
@@ -89,6 +106,7 @@ trait BaseModel
 	}
 
 	/**
+	 * Выбирает связанную запись и подгружает ee в $this->joinedRelations.
 	 * @param \Phalcon\Mvc\Model[] $models
 	 * @param string $relationAlias
 	 * @param string $keyField
@@ -159,6 +177,7 @@ trait BaseModel
 	public function toArrayRelations() {
 		$data = $this->toArray();
 		$data['relations'] = $this->relations;
+		$data['joinedRelations'] = $this->joinedRelations;
 
 		return $data;
 	}
