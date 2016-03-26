@@ -61,6 +61,7 @@ trait BaseModel
 		foreach ($relations as $relation) {
 			$this->joinedRelation($relation);
 		}
+		return $this;
 	}
 
 	/**
