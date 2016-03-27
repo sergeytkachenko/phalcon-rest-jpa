@@ -34,18 +34,21 @@ trait BaseModel
 	public function getRelations() {
 		return $this->getModelsManager()->getRelations(get_class($this));
 	}
-
+	
 	/**
 	 * Подгружает все связанные свойства из других таблиц и ложит все связи в свойство $this->relations
 	 * Очень удобно когда вам нужно выбрать один методом сущность, а также все ее связи.
 	 * Данный метод не подгружает значения связей "один ко многим" и "многие ко многим", если вам нужно загрузить
 	 *  содержимое таких связей используйте BaseModel->joinedRelations.
 	 * @param bool $isConvertToArray
+	 * @param array $needleRelations
 	 * @return $this
+	 * @internal param array $relationsFilter
 	 */
-	public function fetchRelations($isConvertToArray = true) {
+	public function fetchRelations($isConvertToArray = true, array $needleRelations = null) {
 		$relations = $this->getRelations();
 		foreach ($relations as $relation) {
+			if ($needleRelations and !in_array($relation->getOption('alias'), $needleRelations)) {continue;}
 			$this->assignRelation($relation, $isConvertToArray);
 		}
 		return $this;
