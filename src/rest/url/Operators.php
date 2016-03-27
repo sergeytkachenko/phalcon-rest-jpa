@@ -82,7 +82,7 @@ abstract class Operators
 		$params = new Params($fullUrl, $params);
 		$params = $params->getPrepareParams();
 		$query = $builder->getQuery();
-		$query->setBindParams($params);
+		$query->setBindParams($params, true);
 
 		return $query;
 	}
@@ -95,9 +95,11 @@ abstract class Operators
 	 */
 	private static function setLimit(Builder $builder, array $params) {
 		if (empty($params['limit'])) {return $builder;}
-		$limit = $params['limit'];
-		$offset = @$params['offset'];
-		return $builder->limit($limit, $offset);
+		$limit = (int)$params['limit'];
+		$builder->limit($limit);
+		if (empty($params['offset'])) {return $builder;}
+		$offset = (int)$params['offset'];
+		return $builder->offset($offset);
 	}
 
 
