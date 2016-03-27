@@ -46,6 +46,7 @@ class PpaController extends JsonController
 		$isOnlyFirst = !Analyzer::hasMany($url);
 		$isFetchRelations = \PPA\Rest\Request\Params::isNeedFetchRelations($params);
 		$isJoinedRelations = \PPA\Rest\Request\Params::isNeedJoinedRelations($params);
+		$needleRelations = @$params['relations'];
 		if ($isOnlyFirst) {
 			/**
 			 * @var \Phalcon\Mvc\Model $data
@@ -53,16 +54,16 @@ class PpaController extends JsonController
 			$data = $data->getFirst();
 			if (!$data) {return array();}
 			if ($isFetchRelations) {
-				return $data->fetchRelations()->toArrayRelations();
+				return $data->fetchRelations(false, $needleRelations)->toArrayRelations();
 			}
 			if ($isJoinedRelations) {
 				return $data->joinedRelations()->toArrayRelations();
 			}
 			return $data->toArray();
 		}
-		return $data->filter(function($model) use ($isFetchRelations, $isJoinedRelations) {
+		return $data->filter(function($model) use ($isFetchRelations, $isJoinedRelations, $needleRelations) {
 			if ($isFetchRelations) {
-				return $model->fetchRelations();
+				return $model->fetchRelations(false, $needleRelations);
 			}
 			if ($isJoinedRelations) {
 				return $model->joinedRelations();
