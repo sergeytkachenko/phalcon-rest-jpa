@@ -96,7 +96,7 @@ abstract class Operators
 	 */
 	private static function orderBy(Builder $builder, array $params) {
 		if (empty($params['orderBy'])) {return $builder;}
-		$orderBy = (int)$params['orderBy'];
+		$orderBy = (array)$params['orderBy'];
 		return $builder->orderBy($orderBy);
 	}
 
