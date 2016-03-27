@@ -46,7 +46,7 @@ class PpaController extends JsonController
 		$isOnlyFirst = !Analyzer::hasMany($url);
 		$isFetchRelations = \PPA\Rest\Request\Params::isNeedFetchRelations($params);
 		$isJoinedRelations = \PPA\Rest\Request\Params::isNeedJoinedRelations($params);
-		$needleRelations = @$params['relations'];
+		$needleRelations = empty($params['fetchRelations']) ? array() : (array)$params['fetchRelations'];
 		if ($isOnlyFirst) {
 			/**
 			 * @var \Phalcon\Mvc\Model $data
