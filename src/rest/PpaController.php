@@ -137,9 +137,14 @@ class PpaController extends JsonController
 
 	private function saveRelations($model, $relations, $messages = array()) {
 		$id = @$model->id;
+		/**
+		 * @var \Phalcon\Mvc\Model $model
+		 */
 		if (!$model or !$id) {return;}
 		foreach ($relations as $relationName => $relationValues) {
 			if (!is_array($relationValues)) {continue;}
+			$modelRelation = $model->getModelsManager()->getRelationByAlias(get_class($model), $relationName);
+			if ($modelRelation->getType() == 0) {continue;}
 			$messages = $this->deleteRelation($model, $relationName, $messages);
 			$messages = $this->createRelation($model, $relationName, $relationValues, $messages);
 		}
