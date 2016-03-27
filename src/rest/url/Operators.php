@@ -78,7 +78,8 @@ abstract class Operators
 		$whereSql = self::buildWhere($prepareUrl);
 		$whereSqlReplacement = Macros::replace($whereSql, $params, $modelName);
 		$builder->where($whereSqlReplacement);
-		$builder = self::setLimit($builder, $params);
+		$builder = self::limit($builder, $params);
+		$builder = self::orderBy($builder, $params);
 		$params = new Params($fullUrl, $params);
 		$params = $params->getPrepareParams();
 		$query = $builder->getQuery();
@@ -88,12 +89,24 @@ abstract class Operators
 	}
 
 	/**
+	 * Добавляет ->orderBy в $builder.
+	 * @param \Phalcon\Mvc\Model\Query\Builder $builder
+	 * @param array $params
+	 * @return \Phalcon\Mvc\Model\Query\Builder
+	 */
+	private static function orderBy(Builder $builder, array $params) {
+		if (empty($params['orderBy'])) {return $builder;}
+		$orderBy = (int)$params['orderBy'];
+		return $builder->orderBy($orderBy);
+	}
+
+	/**
 	 * Добавляет ->limit в $builder.
 	 * @param \Phalcon\Mvc\Model\Query\Builder $builder
 	 * @param array $params
 	 * @return \Phalcon\Mvc\Model\Query\Builder
 	 */
-	private static function setLimit(Builder $builder, array $params) {
+	private static function limit(Builder $builder, array $params) {
 		if (empty($params['limit'])) {return $builder;}
 		$limit = (int)$params['limit'];
 		$builder->limit($limit);
@@ -101,7 +114,6 @@ abstract class Operators
 		$offset = (int)$params['offset'];
 		return $builder->offset($offset);
 	}
-
 
 	/**
 	 * @param string $preparedUrlWithoutAnd
