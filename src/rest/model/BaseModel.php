@@ -113,6 +113,7 @@ trait BaseModel
 	 * @param string $keyField
 	 */
 	private function joinedHasManyRelation($models, $relationAlias, $keyField) {
+		if (!method_exists($models, 'filter')) {return;}
 		$this->joinedRelations[$relationAlias] = $models->filter(function($model) use ($keyField) {
 			$related = $model->getRelated($keyField);
 			return $related ? $related : array();
