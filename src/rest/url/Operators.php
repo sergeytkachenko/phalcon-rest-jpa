@@ -78,6 +78,7 @@ abstract class Operators
 		$whereSql = self::buildWhere($prepareUrl);
 		$whereSqlReplacement = Macros::replace($whereSql, $params, $modelName);
 		$builder->where($whereSqlReplacement);
+		$builder = self::setLimit($builder, $params);
 		$params = new Params($fullUrl, $params);
 		$params = $params->getPrepareParams();
 		$query = $builder->getQuery();
@@ -85,6 +86,20 @@ abstract class Operators
 
 		return $query;
 	}
+
+	/**
+	 * Добавляет ->limit в $builder.
+	 * @param \Phalcon\Mvc\Model\Query\Builder $builder
+	 * @param array $params
+	 * @return \Phalcon\Mvc\Model\Query\Builder
+	 */
+	private static function setLimit(Builder $builder, array $params) {
+		if (empty($params['limit'])) {return $builder;}
+		$limit = $params['limit'];
+		$offset = empty($params['offset']) ? null : $params['offset'];
+		return $builder->limit($limit, $offset);
+	}
+
 
 	/**
 	 * @param string $preparedUrlWithoutAnd
