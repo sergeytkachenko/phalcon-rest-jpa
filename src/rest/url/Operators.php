@@ -96,7 +96,7 @@ abstract class Operators
 	private static function setLimit(Builder $builder, array $params) {
 		if (empty($params['limit'])) {return $builder;}
 		$limit = $params['limit'];
-		$offset = empty($params['offset']) ? null : $params['offset'];
+		$offset = @$params['offset'];
 		return $builder->limit($limit, $offset);
 	}
 
