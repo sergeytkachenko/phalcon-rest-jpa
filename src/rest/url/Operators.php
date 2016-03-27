@@ -95,8 +95,17 @@ abstract class Operators
 	 * @return \Phalcon\Mvc\Model\Query\Builder
 	 */
 	private static function orderBy(Builder $builder, array $params) {
+		$model = $builder->getFrom();
 		if (empty($params['orderBy'])) {return $builder;}
 		$orderBy = (array)$params['orderBy'];
+		foreach ($orderBy as $key => $item) {
+			$order =  explode('|', $item);
+			$order =  implode(' ', $order);
+			if (!preg_match('/\./', $item)) {
+				$order = $model . '.' . $order;
+			}
+			$orderBy[$key] = $order;
+		}
 		return $builder->orderBy($orderBy);
 	}
 
