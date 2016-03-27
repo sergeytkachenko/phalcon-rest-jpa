@@ -28,7 +28,8 @@ class PpaController extends JsonController
 			if (!$data) {return array();}
 			return $this->getFinallyFullData($data, $params, $url);
 		} catch (\PPA\Rest\Exception $e) {
-			debug($e);
+			$this->response->setStatusCode(500);
+			return $e;
 		}
 	}
 
