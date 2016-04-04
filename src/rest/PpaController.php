@@ -22,7 +22,6 @@ class PpaController extends JsonController
 				return $this->delete();
 			}
 			$params = Params::getMergeParams($this->request);
-
 			$query = Operators::buildQuery($url, $params);
 			$data = $query->execute();
 			if (!$data) {return array();}
@@ -154,6 +153,7 @@ class PpaController extends JsonController
 
 	private function createRelation($model, $relationName, $relationValues, $messages = array()) {
 		foreach ($relationValues as $relationValue) {
+			unset($relationValue['id']);
 			$relation = new $relationName;
 			$relation->assign($relationValue);
 			$referencedFields = $model->getHasManyRelationReferencedFields($relationName);
