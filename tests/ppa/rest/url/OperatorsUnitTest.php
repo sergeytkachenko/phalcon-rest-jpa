@@ -89,7 +89,10 @@ class OperatorsUnitTest extends \UnitTestCase
 			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`last_name` FROM `test_model` WHERE `test_model`.`title` LIKE :search OR `test_model`.`last_name` LIKE :search"
 		),
 		'/api/ppa/s/testModel/findByIdIsNull' => array(
-			'params' => array(),
+			'params' => array(
+				"joinedRelations",
+				"_" => "1459890761057"
+			),
 			'prepareParams' => array(),
 			'sql' => "SELECT `test_model`.`id`, `test_model`.`title`, `test_model`.`last_name` FROM `test_model` WHERE `test_model`.`id`  IS NULL"
 		)

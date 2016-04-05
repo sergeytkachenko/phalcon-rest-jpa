@@ -10,7 +10,7 @@ class Text extends \Phalcon\Text
 	 * @return string
 	 */
 	public static function getColumnLowerCase($column) {
-		$column = Text::uncamelize($column);
+		$column = Text::uncamelize($column . "");
 		$column = Text::camelize($column);
 		return lcfirst($column);
 	}

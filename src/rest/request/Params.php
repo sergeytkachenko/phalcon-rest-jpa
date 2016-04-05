@@ -81,6 +81,7 @@ class Params
 	 */
 	public function getPrepareParams() {
 		foreach ($this->paramsPortion as $key => $portion) {
+			if (!$key) {continue;}
 			$value = Operations::getPrepareParam($portion, $this->params[$key]);
 			$this->bindParams[$key] = $value;
 		}
