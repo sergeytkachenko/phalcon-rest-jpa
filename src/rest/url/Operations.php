@@ -158,6 +158,7 @@ abstract class Operations
 		$operationKey = self::getSearchOperationKey($portion);
 		if (!$operationKey) {return $value;}
 		$methodName = 'get' . $operationKey . 'Param';
+		if(!method_exists(get_class(), $methodName)) {return array();}
 		return self::$methodName($value);
 	}
 
