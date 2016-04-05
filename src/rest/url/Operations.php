@@ -211,6 +211,15 @@ abstract class Operations
 	 * @param Portion $portion
 	 * @return string
 	 */
+	public static function getIsNull(Portion $portion) {
+		$columnName = self::getColumnName($portion);
+		return $columnName . ' IS NULL';
+	}
+
+	/**
+	 * @param Portion $portion
+	 * @return string
+	 */
 	public static function getContaining(Portion $portion) {
 		return self::getLike($portion);
 	}
