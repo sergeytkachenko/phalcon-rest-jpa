@@ -85,9 +85,12 @@ trait BaseModel
 				break;
 			case 2: // HasMany
 				if (!$keyField) {
+					return $this;
+					/**
 					throw new \PPA\Rest\Exception('If can use joinedRelation, you need to set '
 						. self::$referencesKeyOption . ' of relation ' . $relationAlias
 						. ' in model ' . get_class($this));
+					 **/
 				}
 				$this->joinedHasManyRelation($relationModel, $relationAlias, $keyField);
 				break;
