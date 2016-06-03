@@ -2,6 +2,8 @@
 
 namespace PPA\Rest\Acl\Level;
 
+use PPA\Rest\Acl\CheckerAccessLevel;
+
 class DeniedLevel implements CheckerAccessLevel {
 	
 	/**
