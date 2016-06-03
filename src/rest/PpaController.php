@@ -43,7 +43,7 @@ class PpaController extends JsonController
 			$this->response->setStatusCode(401);
 			return array(
 				'msg' => $e->getMessage(),
-				'trace' => $e->getTrace()
+				'url' => $url
 			);
 		} catch (\PPA\Rest\Exception $e) {
 			$this->response->setStatusCode(500);
