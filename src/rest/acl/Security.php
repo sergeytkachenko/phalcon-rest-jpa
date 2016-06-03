@@ -14,7 +14,7 @@ class Security {
 	public function check() {
 		$access = $this->checkerAccessLevel->doCheck($this->params);
 		if (true !== $access) {
-			throw new Exception('Sorry, you are access denied for this crud operation');
+			throw new Exception('Sorry, you are not have permission for this crud operation');
 		}
 	}
 }
