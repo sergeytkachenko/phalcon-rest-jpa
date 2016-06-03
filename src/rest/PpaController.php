@@ -3,12 +3,24 @@ namespace PPA\Rest;
 
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Model\ResultsetInterface;
+use PPA\Rest\Acl\AllowedLevel;
+use PPA\Rest\Acl\DeniedLevel;
+use PPA\Rest\Acl\Security;
 use PPA\Rest\Url\Analyzer;
 use PPA\Rest\Url\Operators;
 use PPA\Rest\Utils\Params;
 
 class PpaController extends JsonController
 {
+	private $aclServiceName = 'checkerAccessLevel';
+	/**
+	 * @var \PPA\Rest\Acl\Security
+	 */
+	private $security;
+
+	/**
+	 * @return array
+	 */
 	public function crudAction() {
 		try {
 			$url = $this->request->get('_url');
@@ -23,9 +35,16 @@ class PpaController extends JsonController
 			}
 			$params = Params::getMergeParams($this->request);
 			$query = Operators::buildQuery($url, $params);
+			$this->security->check();
 			$data = $query->execute();
 			if (!$data) {return array();}
 			return $this->getFinallyFullData($data, $params, $url);
+		} catch (\PPA\Rest\Acl\Exception $e) {
+			$this->response->setStatusCode(401);
+			return array(
+				'msg' => $e->getMessage(),
+				'trace' => $e->getTrace()
+			);
 		} catch (\PPA\Rest\Exception $e) {
 			$this->response->setStatusCode(500);
 			return array(
@@ -91,6 +110,7 @@ class PpaController extends JsonController
 				);
 			}
 			$model->assign($params);
+			$this->security->check();
 			if ($model->save()) {
 				$errors = $this->saveRelations($model, Params::getRelations($this->request));
 				if ($errors !== array()) {
@@ -115,6 +135,7 @@ class PpaController extends JsonController
 		 */
 		$model = new $modelName();
 		$model->assign($params);
+		$this->security->check();
 		if ($model->save()) {
 			$errors = $this->saveRelations($model, Params::getRelations($this->request));
 			if ($errors !== array()) {
@@ -160,6 +181,7 @@ class PpaController extends JsonController
 			$relation->assign(array(
 				$referencedFields => $model->id
 			));
+			$this->security->check();
 			if (!$relation->save()) {
 				$messages[] = implode(', ', $relation->getMessages());
 			}
@@ -169,6 +191,7 @@ class PpaController extends JsonController
 
 	private function deleteRelation($model, $relationName, $messages = array()) {
 		foreach ($model->{$relationName} as $related) {
+			$this->security->check();
 			/**
 			 * @var \Phalcon\Mvc\Model $related
 			 */
@@ -203,6 +226,7 @@ class PpaController extends JsonController
 				'msg' => 'Record with id '. $id .' not found'
 			);
 		}
+		$this->security->check();
 		if ($model->delete()) {
 			return array(
 				'success' => true,
@@ -213,5 +237,16 @@ class PpaController extends JsonController
 			'success' => false,
 			'msg' => $this->jsonRecursiveGetMsg($model->getMessages())
 		);
+	}
+
+	public function beforeExecuteRoute() {
+		$this->initAcl();
+	}
+
+	private function initAcl() {
+		$di = $this->getDI();
+		$aclServiceName = $this->aclServiceName;
+		$checkerAccessLevel = $di->has($aclServiceName) ?  $di->get($aclServiceName) : new DeniedLevel();
+		$this->security = new Security($checkerAccessLevel);
 	}
 }
