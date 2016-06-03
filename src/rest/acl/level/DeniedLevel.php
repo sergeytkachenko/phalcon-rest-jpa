@@ -1,6 +1,6 @@
 <?
 
-namespace PPA\Rest\Acl;
+namespace PPA\Rest\Acl\Level;
 
 class DeniedLevel implements CheckerAccessLevel {
 	
