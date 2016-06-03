@@ -12,7 +12,7 @@
 			"PPA\\Rest\\Request\\":"src/rest/request",
 			"PPA\\Rest\\Utils\\":"src/rest/utils",
 			"PPA\\Rest\\Acl\\":"src/rest/acl",
-			"PPA\\Rest\\Acl\\Level":"src/rest/acl/level"
+			"PPA\\Rest\\Acl\\Level\\":"src/rest/acl/level"
 		}
 	},
 
