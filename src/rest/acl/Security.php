@@ -5,7 +5,7 @@ namespace PPA\Rest\Acl;
 class Security {
 
 	protected $checkerAccessLevel;
-	protected $params;
+	protected $params = null;
 
 	public function __construct(CheckerAccessLevel $checkerAccessLevel) {
 		$this->checkerAccessLevel = $checkerAccessLevel;
