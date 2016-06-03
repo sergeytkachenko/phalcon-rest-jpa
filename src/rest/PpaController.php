@@ -3,8 +3,8 @@ namespace PPA\Rest;
 
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Model\ResultsetInterface;
-use PPA\Rest\Acl\AllowedLevel;
-use PPA\Rest\Acl\DeniedLevel;
+use PPA\Rest\Acl\Level\AllowedLevel;
+use PPA\Rest\Acl\Level\DeniedLevel;
 use PPA\Rest\Acl\Security;
 use PPA\Rest\Url\Analyzer;
 use PPA\Rest\Url\Operators;
