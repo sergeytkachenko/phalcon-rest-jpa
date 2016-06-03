@@ -246,7 +246,7 @@ class PpaController extends JsonController
 	private function initAcl() {
 		$di = $this->getDI();
 		$aclServiceName = $this->aclServiceName;
-		$checkerAccessLevel = $di->has($aclServiceName) ?  $di->get($aclServiceName) : new DeniedLevel();
+		$checkerAccessLevel = $di->has($aclServiceName) ?  $di->get($aclServiceName) : new AllowedLevel();
 		$this->security = new Security($checkerAccessLevel);
 	}
 }
