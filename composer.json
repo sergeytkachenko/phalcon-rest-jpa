@@ -5,14 +5,14 @@
 	"autoload":{
 		"psr-4":{
 			"PPA\\":"src",
-			"PPA\\Rest\\":"src/rest",
-			"PPA\\Rest\\Model\\":"src/rest/model",
-			"PPA\\Rest\\Url\\":"src/rest/url",
-			"PPA\\Rest\\Column\\":"src/rest/column",
-			"PPA\\Rest\\Request\\":"src/rest/request",
-			"PPA\\Rest\\Utils\\":"src/rest/utils",
-			"PPA\\Rest\\Acl\\":"src/rest/acl",
-			"PPA\\Rest\\Acl\\Level\\":"src/rest/acl/level"
+			"PPA\\Rest\\":"src/Rest",
+			"PPA\\Rest\\Model\\":"src/Rest/Model",
+			"PPA\\Rest\\Url\\":"src/Rest/Url",
+			"PPA\\Rest\\Column\\":"src/Rest/Column",
+			"PPA\\Rest\\Request\\":"src/Rest/Request",
+			"PPA\\Rest\\Utils\\":"src/Rest/Utils",
+			"PPA\\Rest\\Acl\\":"src/Rest/Acl",
+			"PPA\\Rest\\Acl\\Level\\":"src/Rest/Acl/Level"
 		}
 	},
 
