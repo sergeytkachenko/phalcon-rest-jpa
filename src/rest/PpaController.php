@@ -3,6 +3,7 @@ namespace PPA\Rest;
 
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Model\ResultsetInterface;
+use PPA\Rest\Acl\CheckerAccessLevel;
 use PPA\Rest\Acl\Level\AllowedLevel;
 use PPA\Rest\Acl\Level\DeniedLevel;
 use PPA\Rest\Acl\Security;
@@ -12,7 +13,6 @@ use PPA\Rest\Utils\Params;
 
 class PpaController extends JsonController
 {
-	private $aclServiceName = 'checkerAccessLevel';
 	/**
 	 * @var \PPA\Rest\Acl\Security
 	 */
@@ -274,7 +274,7 @@ class PpaController extends JsonController
 
 	private function initAcl() {
 		$di = $this->getDI();
-		$aclServiceName = $this->aclServiceName;
+		$aclServiceName = CheckerAccessLevel::DI_SERVICE_NAME;
 		$checkerAccessLevel = $di->has($aclServiceName) ?  $di->get($aclServiceName) : new AllowedLevel();
 		$this->security = new Security($checkerAccessLevel);
 	}

@@ -2,6 +2,8 @@
 namespace PPA\Rest\Acl;
 
 interface CheckerAccessLevel {
+	const DI_SERVICE_NAME = 'checkerAccessLevel'; 
+	
 	/**
 	 * Checks access to crud operation.
 	 * array
