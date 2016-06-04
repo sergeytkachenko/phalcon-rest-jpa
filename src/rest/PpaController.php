@@ -35,8 +35,13 @@ class PpaController extends JsonController
 			}
 			$params = Params::getMergeParams($this->request);
 			$query = Operators::buildQuery($url, $params);
-			$this->security->check();
 			$data = $query->execute();
+			$this->security->check(array(
+				'model' => $data,
+				'action' => 'r',
+				'modelName' => Analyzer::getModelName($url),
+				'params' => $params
+			));
 			if (!$data) {return array();}
 			return $this->getFinallyFullData($data, $params, $url);
 		} catch (\PPA\Rest\Acl\Exception $e) {
@@ -110,7 +115,12 @@ class PpaController extends JsonController
 				);
 			}
 			$model->assign($params);
-			$this->security->check();
+			$this->security->check(array(
+				'model' => $model,
+				'action' => 'u',
+				'modelName' => $modelName,
+				'params' => $params
+			));
 			if ($model->save()) {
 				$errors = $this->saveRelations($model, Params::getRelations($this->request));
 				if ($errors !== array()) {
@@ -135,7 +145,12 @@ class PpaController extends JsonController
 		 */
 		$model = new $modelName();
 		$model->assign($params);
-		$this->security->check();
+		$this->security->check(array(
+			'model' => $model,
+			'action' => 'c',
+			'modelName' => $modelName,
+			'params' => $params
+		));
 		if ($model->save()) {
 			$errors = $this->saveRelations($model, Params::getRelations($this->request));
 			if ($errors !== array()) {
@@ -181,7 +196,12 @@ class PpaController extends JsonController
 			$relation->assign(array(
 				$referencedFields => $model->id
 			));
-			$this->security->check();
+			$this->security->check(array(
+				'model' => $relation,
+				'action' => 'c',
+				'modelName' => get_class($relation),
+				'params' => $relationValues
+			));
 			if (!$relation->save()) {
 				$messages[] = implode(', ', $relation->getMessages());
 			}
@@ -191,7 +211,11 @@ class PpaController extends JsonController
 
 	private function deleteRelation($model, $relationName, $messages = array()) {
 		foreach ($model->{$relationName} as $related) {
-			$this->security->check();
+			$this->security->check(array(
+				'model' => $related,
+				'action' => 'd',
+				'modelName' => get_class($related)
+			));
 			/**
 			 * @var \Phalcon\Mvc\Model $related
 			 */
@@ -226,7 +250,12 @@ class PpaController extends JsonController
 				'msg' => 'Record with id '. $id .' not found'
 			);
 		}
-		$this->security->check();
+		$this->security->check(array(
+			'model' => $model,
+			'action' => 'd',
+			'modelName' => $modelName,
+			'params' => $params
+		));
 		if ($model->delete()) {
 			return array(
 				'success' => true,
