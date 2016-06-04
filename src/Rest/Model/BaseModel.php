@@ -1,4 +1,5 @@
-<?
+<?php
+
 namespace PPA\Rest\Model;
 use Phalcon\Exception;
 use Phalcon\Mvc\Model;
