@@ -3,6 +3,7 @@ namespace PPA\Rest;
 
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Model\ResultsetInterface;
+use PPA\Rest\Acl\CrudOperations;
 use PPA\Rest\Acl\CheckerAccessLevel;
 use PPA\Rest\Acl\Level\AllowedLevel;
 use PPA\Rest\Acl\Level\DeniedLevel;
@@ -38,7 +39,7 @@ class PpaController extends JsonController
 			$data = $query->execute();
 			$this->security->check(array(
 				'model' => $data,
-				'action' => 'r',
+				'action' => CrudOperations::READ,
 				'modelName' => Analyzer::getModelName($url),
 				'params' => $params
 			));
@@ -117,7 +118,7 @@ class PpaController extends JsonController
 			$model->assign($params);
 			$this->security->check(array(
 				'model' => $model,
-				'action' => 'u',
+				'action' => CrudOperations::UPDATE,
 				'modelName' => $modelName,
 				'params' => $params
 			));
@@ -147,7 +148,7 @@ class PpaController extends JsonController
 		$model->assign($params);
 		$this->security->check(array(
 			'model' => $model,
-			'action' => 'c',
+			'action' => CrudOperations::CREATE,
 			'modelName' => $modelName,
 			'params' => $params
 		));
@@ -198,7 +199,7 @@ class PpaController extends JsonController
 			));
 			$this->security->check(array(
 				'model' => $relation,
-				'action' => 'c',
+				'action' => CrudOperations::CREATE,
 				'modelName' => get_class($relation),
 				'params' => $relationValues
 			));
@@ -213,7 +214,7 @@ class PpaController extends JsonController
 		foreach ($model->{$relationName} as $related) {
 			$this->security->check(array(
 				'model' => $related,
-				'action' => 'd',
+				'action' => CrudOperations::DELETE,
 				'modelName' => get_class($related)
 			));
 			/**
@@ -252,7 +253,7 @@ class PpaController extends JsonController
 		}
 		$this->security->check(array(
 			'model' => $model,
-			'action' => 'd',
+			'action' => CrudOperations::DELETE,
 			'modelName' => $modelName,
 			'params' => $params
 		));
