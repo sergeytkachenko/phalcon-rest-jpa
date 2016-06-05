@@ -8,6 +8,8 @@ use PPA\Rest\Acl\CheckerAccessLevel;
 use PPA\Rest\Acl\Level\AllowedLevel;
 use PPA\Rest\Acl\Level\DeniedLevel;
 use PPA\Rest\Acl\Security;
+use PPA\Rest\Log\Data\EmptyDiffer;
+use PPA\Rest\Log\Data\ModelDiffer;
 use PPA\Rest\Log\Manager;
 use PPA\Rest\Url\Analyzer;
 use PPA\Rest\Url\Operators;
@@ -128,7 +130,7 @@ class PpaController extends JsonController
 				'params' => $params
 			));
 			if ($model->save()) {
-				$this->logManager->save($model);
+				$this->logManager->saveModel($model);
 				$errors = $this->saveRelations($model, Params::getRelations($this->request));
 				if ($errors !== array()) {
 					return array(
@@ -159,7 +161,7 @@ class PpaController extends JsonController
 			'params' => $params
 		));
 		if ($model->save()) {
-			$this->logManager->create($model);
+			$this->logManager->createModel($model);
 			$errors = $this->saveRelations($model, Params::getRelations($this->request));
 			if ($errors !== array()) {
 				return array(
@@ -211,7 +213,7 @@ class PpaController extends JsonController
 				'params' => $relationValues
 			));
 			if ($relation->save()) {
-				$this->logManager->save($model);
+				$this->logManager->saveModel($model);
 			} else {
 				$messages[] = implode(', ', $relation->getMessages());
 			}
@@ -230,7 +232,7 @@ class PpaController extends JsonController
 			 * @var \Phalcon\Mvc\Model $related
 			 */
 			if ($related->delete()) {
-				$this->logManager->delete($model);
+				$this->logManager->deleteModel($model);
 			} else {
 				$messages[] = implode(', ', $related->getMessages());
 			}
@@ -268,9 +270,9 @@ class PpaController extends JsonController
 			'modelName' => $modelName,
 			'params' => $params
 		));
-		$this->logManager->delete($model);
+		$this->logManager->deleteModel($model);
 		if ($model->delete()) {
-			$this->logManager->delete($model);
+			$this->logManager->deleteModel($model);
 			return array(
 				'success' => true,
 				'msg' => 'Record with id '. $id .' has removed!'
@@ -283,18 +285,21 @@ class PpaController extends JsonController
 	}
 
 	public function beforeExecuteRoute() {
-		$this->initAcl();
-		$this->initLog();
+		$this->initAclService();
+		$this->initLogService();
 	}
 
-	private function initAcl() {
+	private function initAclService() {
 		$di = $this->getDI();
 		$aclServiceName = CheckerAccessLevel::DI_SERVICE_NAME;
-		$checkerAccessLevel = $di->has($aclServiceName) ?  $di->get($aclServiceName) : new AllowedLevel();
+		$checkerAccessLevel = $di->has($aclServiceName) ? $di->get($aclServiceName) : new AllowedLevel();
 		$this->security = new Security($checkerAccessLevel);
 	}
 
-	private function initLog() {
-		$this->logManager = new Manager();
+	private function initLogService() {
+		$di = $this->getDI();
+		$modelDifferService = ModelDiffer::DI_SERVICE_NAME;
+		$modelDiffer = $di->has($modelDifferService) ? $di->get($modelDifferService) : new EmptyDiffer();
+		$this->logManager = new Manager($modelDiffer);
 	}
 }

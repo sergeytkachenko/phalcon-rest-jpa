@@ -4,8 +4,7 @@ namespace PPA\Rest\Log;
 
 use Phalcon\Mvc\Model;
 
-class Data
-{
+class ChangedData {
 	/**
 	 * @var \Phalcon\Mvc\Model
 	 */
@@ -38,7 +37,17 @@ class Data
 		$this->oldModel = $model;
 	}
 
-	public function getDiff() {
-		return null; // TODO : impl diff 
+	/**
+	 * @return Model
+	 */
+	public function getOldModel() {
+		return $this->oldModel;
+	}
+
+	/**
+	 * @return Model
+	 */
+	public function getNewModel() {
+		return $this->newModel;
 	}
 }
