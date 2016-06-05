@@ -11,7 +11,12 @@ use Phalcon\Mvc\Model\Relation;
  */
 trait BaseModel
 {
-
+	/**
+	 * @return mixed Name of the class with namespace.
+	 */
+	public function getClassName() {
+		return static::class;
+	}
 	/**
 	 * тут храниться массив связей, который наполняется при вызове метода ->fetchRelations
 	 * @var array

@@ -8,6 +8,7 @@ use PPA\Rest\Acl\CheckerAccessLevel;
 use PPA\Rest\Acl\Level\AllowedLevel;
 use PPA\Rest\Acl\Level\DeniedLevel;
 use PPA\Rest\Acl\Security;
+use PPA\Rest\Log\Manager;
 use PPA\Rest\Url\Analyzer;
 use PPA\Rest\Url\Operators;
 use PPA\Rest\Utils\Params;
@@ -18,6 +19,10 @@ class PpaController extends JsonController
 	 * @var \PPA\Rest\Acl\Security
 	 */
 	private $security;
+	/**
+	 * @var \PPA\Rest\Log\Manager
+	 */
+	private $logManager;
 
 	/**
 	 * @return array
@@ -123,6 +128,7 @@ class PpaController extends JsonController
 				'params' => $params
 			));
 			if ($model->save()) {
+				$this->logManager->save($model);
 				$errors = $this->saveRelations($model, Params::getRelations($this->request));
 				if ($errors !== array()) {
 					return array(
@@ -153,6 +159,7 @@ class PpaController extends JsonController
 			'params' => $params
 		));
 		if ($model->save()) {
+			$this->logManager->create($model);
 			$errors = $this->saveRelations($model, Params::getRelations($this->request));
 			if ($errors !== array()) {
 				return array(
@@ -203,7 +210,9 @@ class PpaController extends JsonController
 				'modelName' => get_class($relation),
 				'params' => $relationValues
 			));
-			if (!$relation->save()) {
+			if ($relation->save()) {
+				$this->logManager->save($model);
+			} else {
 				$messages[] = implode(', ', $relation->getMessages());
 			}
 		}
@@ -220,7 +229,7 @@ class PpaController extends JsonController
 			/**
 			 * @var \Phalcon\Mvc\Model $related
 			 */
-			if (!$related->delete()) {
+			if ($related->delete()) {
 				$messages[] = implode(', ', $related->getMessages());
 			}
 		}
@@ -278,5 +287,9 @@ class PpaController extends JsonController
 		$aclServiceName = CheckerAccessLevel::DI_SERVICE_NAME;
 		$checkerAccessLevel = $di->has($aclServiceName) ?  $di->get($aclServiceName) : new AllowedLevel();
 		$this->security = new Security($checkerAccessLevel);
+	}
+
+	private function initLog() {
+		$this->logManager = new Manager();
 	}
 }
