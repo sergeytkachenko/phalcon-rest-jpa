@@ -230,6 +230,8 @@ class PpaController extends JsonController
 			 * @var \Phalcon\Mvc\Model $related
 			 */
 			if ($related->delete()) {
+				$this->logManager->delete($model);
+			} else {
 				$messages[] = implode(', ', $related->getMessages());
 			}
 		}
@@ -266,7 +268,9 @@ class PpaController extends JsonController
 			'modelName' => $modelName,
 			'params' => $params
 		));
+		$this->logManager->delete($model);
 		if ($model->delete()) {
+			$this->logManager->delete($model);
 			return array(
 				'success' => true,
 				'msg' => 'Record with id '. $id .' has removed!'

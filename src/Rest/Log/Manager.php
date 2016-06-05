@@ -17,5 +17,11 @@ class Manager
 		$data->setNewModel($model);
 		debug($data);
 	}
+	
+	public function delete(Model $model) {
+		$data = new Data();
+		$data->setOldModel($model);
+		debug($data);
+	}
 
 }

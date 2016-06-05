@@ -31,6 +31,13 @@ class Data
 		$this->newModel = $model;
 	}
 
+	/**
+	 * @param Model $model
+	 */
+	public function setOldModel(Model $model) {
+		$this->oldModel = $model;
+	}
+
 	public function getDiff() {
 		return null; // TODO : impl diff 
 	}
