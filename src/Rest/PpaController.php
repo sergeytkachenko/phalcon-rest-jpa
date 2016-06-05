@@ -280,6 +280,7 @@ class PpaController extends JsonController
 
 	public function beforeExecuteRoute() {
 		$this->initAcl();
+		$this->initLog();
 	}
 
 	private function initAcl() {
