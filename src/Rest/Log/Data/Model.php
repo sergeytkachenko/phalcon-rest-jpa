@@ -21,6 +21,11 @@ class Model {
 	 */
 	public $newValue = null;
 
+	/**
+	 * @var string null
+	 */
+	public $requestId = null;
+
 	public function assign(DiffOp $diff) {
 		$data = $diff->toArray();
 		$this->oldValue = @$data['oldvalue'];

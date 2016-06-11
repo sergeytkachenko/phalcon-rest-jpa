@@ -3,6 +3,7 @@
 namespace PPA\Rest\Log;
 
 use Phalcon\Mvc\Model;
+use Phalcon\Text;
 use PPA\Rest\Log\Data\EmptyDiffer;
 
 class Manager
@@ -95,4 +96,9 @@ class Manager
 		$diffModels = $this->changeData->getDiffModels($this->modelName);
 		$this->modelDiffer->diff($diffModels);
 	}
+
+	public function setLogChangeGroupId() {
+		$this->logChangeGroupId = Text::random();
+	}
+
 }

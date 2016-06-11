@@ -4,6 +4,7 @@ namespace PPA\Rest\Log;
 
 use Diff\Differ\MapDiffer;
 use Phalcon\Mvc\Model;
+use Phalcon\Text;
 
 class ChangedData {
 
@@ -19,6 +20,11 @@ class ChangedData {
 	 * @var \Diff\Differ\MapDiffer
 	 */
 	protected $differ;
+
+	/**
+	 * @var string
+	 */
+	protected $requestId;
 
 	/**
 	 * ChangedData constructor.
@@ -64,6 +70,10 @@ class ChangedData {
 		return $this->differ->doDiff($oldModel, $newModel);
 	}
 
+	public function setRequestId() {
+		$this->requestId = Text::random();
+	}
+
 	/**
 	 * @param string $modelName
 	 * @param array $models
@@ -76,6 +86,7 @@ class ChangedData {
 			$model->assign($diff);
 			$model->modelName = $modelName;
 			$model->columnName = $columnName;
+			$model->requestId = $this->requestId;
 			if ($model->oldValue == $model->newValue) {
 				continue;
 			}
