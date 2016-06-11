@@ -1,31 +1,14 @@
 <?
 namespace PPA\Rest\Log\Data;
-use PPA\Rest\Log\ChangedData;
+use PPA\Rest\Log\Data\Model as DataModel;
 
 class EmptyDiffer implements ModelDiffer
 {
-	
-	/**
-	 * @param ChangedData $changedData
-	 * @return bool
-	 */
-	public function saveDiff(ChangedData $changedData) {
-		return true;
-	}
 
 	/**
-	 * @param ChangedData $changedData
-	 * @return mixed
+	 * @param \PPA\Rest\Log\Data\Model $model
 	 */
-	public function createDiff(ChangedData $changedData) {
-		return true;
-	}
-
-	/**
-	 * @param ChangedData $changedData
-	 * @return mixed
-	 */
-	public function deleteDiff(ChangedData $changedData) {
-		return true;
+	public function diff(DataModel $model) {
+		// empty differ 
 	}
 }

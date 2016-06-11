@@ -58,9 +58,19 @@ class ChangedData {
 	/**
 	 * @return \Diff\DiffOp\DiffOp[]
 	 */
-	public function getDiff() {
+	protected function getDiff() {
 		$oldModel = $this->oldModel ? $this->oldModel->toArray() : array();
 		$newModel = $this->newModel ? $this->newModel->toArray() : array();
 		return $this->differ->doDiff($oldModel, $newModel);
+	}
+
+	public function getDiffModel() {
+		$diffList = $this->getDiff();
+		$model = new \PPA\Rest\Log\Data\Model();
+		foreach ($diffList as $columnName => $diff) {
+			$diffType = $diff->getType();
+			debug($diffType);
+		}
+		return $model;
 	}
 }

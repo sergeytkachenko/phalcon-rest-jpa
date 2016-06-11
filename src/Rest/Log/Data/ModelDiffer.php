@@ -1,26 +1,14 @@
 <?
 namespace PPA\Rest\Log\Data;
 
-use Phalcon\Mvc\Model;
-use PPA\Rest\Log\ChangedData;
+use PPA\Rest\Log\Data\Model as DataModel;
 
 interface ModelDiffer {
+
 	const DI_SERVICE_NAME = 'modelDifferService';
-	
-	/**
-	 * @param ChangedData $changedData
-	 */
-	public function saveDiff(ChangedData $changedData);
 
 	/**
-	 * @param ChangedData $changedData
-	 * @return mixed
+	 * @param \PPA\Rest\Log\Data\Model $model
 	 */
-	public function createDiff(ChangedData $changedData);
-
-	/**
-	 * @param ChangedData $changedData
-	 * @return mixed
-	 */
-	public function deleteDiff(ChangedData $changedData);
+	public function diff(DataModel $model);
 }

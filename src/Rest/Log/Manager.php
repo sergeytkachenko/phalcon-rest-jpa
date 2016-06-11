@@ -32,7 +32,7 @@ class Manager
 	public function saveModel(Model $model) {
 		if ($this->isEmptyDiffer()) {return;}
 		$this->changeData->setNewModel($model);
-		$this->modelDiffer->saveDiff($this->changeData);
+		$this->invokeDiffer();
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Manager
 		if ($this->isEmptyDiffer()) {return;}
 		$this->changeData->setOldModel(null);
 		$this->changeData->setNewModel($model);
-		$this->modelDiffer->createDiff($this->changeData);
+		$this->invokeDiffer();
 	}
 	
 	/**
@@ -52,7 +52,7 @@ class Manager
 		if ($this->isEmptyDiffer()) {return;}
 		$this->changeData->setOldModel($model);
 		$this->changeData->setNewModel(null);
-		$this->modelDiffer->deleteDiff($this->changeData);
+		$this->invokeDiffer();
 	}
 
 	public function setOldModel($model) {
@@ -73,5 +73,10 @@ class Manager
 	 */
 	public function getChangeData() {
 		return $this->changeData;
+	}
+
+	private function invokeDiffer() {
+		$diffModel = $this->changeData->getDiffModel();
+		$this->modelDiffer->diff($diffModel);
 	}
 }
