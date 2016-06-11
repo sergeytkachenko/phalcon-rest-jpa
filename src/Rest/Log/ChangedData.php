@@ -68,6 +68,8 @@ class ChangedData {
 	 * @return \Diff\DiffOp\DiffOp[]
 	 */
 	public function getDiff() {
-		return $this->differ->doDiff((array) $this->oldModel, (array) $this->newModel);
+		$oldModel = $this->oldModel ? $this->oldModel->toArray() : null;
+		$newModel = $this->newModel ? $this->newModel->toArray() : null;
+		return $this->differ->doDiff($oldModel, $newModel);
 	}
 }
