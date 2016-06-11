@@ -24,6 +24,11 @@ class Manager
 	protected $changeData;
 
 	/**
+	 * @var string
+	 */
+	protected $requestId;
+
+	/**
 	 * Manager constructor.
 	 * @param $modelDiffer
 	 */
@@ -92,13 +97,13 @@ class Manager
 		return $this->changeData;
 	}
 
-	private function invokeDiffer() {
-		$diffModels = $this->changeData->getDiffModels($this->modelName);
-		$this->modelDiffer->diff($diffModels);
+	public function setRequestId() {
+		$this->requestId = Text::random();
 	}
 
-	public function setLogChangeGroupId() {
-		$this->logChangeGroupId = Text::random();
+	private function invokeDiffer() {
+		$diffModels = $this->changeData->getDiffModels($this->modelName);
+		$this->modelDiffer->diff($diffModels, $this->requestId);
 	}
 
 }

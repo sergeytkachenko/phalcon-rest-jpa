@@ -7,6 +7,8 @@ interface ModelDiffer {
 
 	/**
 	 * @param \PPA\Rest\Log\Data\Model[] $models
+	 * @param string $requestId
+	 * @return
 	 */
-	public function diff(array $models);
+	public function diff(array $models, $requestId);
 }

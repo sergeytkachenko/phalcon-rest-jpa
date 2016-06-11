@@ -111,7 +111,7 @@ class PpaController extends JsonController
 		$params = Params::getMergeParams($this->request);
 		$id = intval(@$params['id']);
 		$modelName = Analyzer::getModelName($this->request->get('_url'));
-		$this->logManager->getChangeData()->setRequestId();
+		$this->logManager->setRequestId();
 		if ($id) {
 			/**
 			 * @var \Phalcon\Mvc\Model $model
