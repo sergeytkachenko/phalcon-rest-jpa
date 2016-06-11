@@ -13,11 +13,17 @@ class Manager
 	protected $modelDiffer;
 
 	/**
+	 * @var \PPA\Rest\Log\ChangedData
+	 */
+	protected $changeData;
+
+	/**
 	 * Manager constructor.
 	 * @param $modelDiffer
 	 */
 	public function __construct($modelDiffer) {
 		$this->modelDiffer = $modelDiffer;
+		$this->changeData = new ChangedData();
 	}
 
 	/**
@@ -25,9 +31,8 @@ class Manager
 	 */
 	public function saveModel(Model $model) {
 		if ($this->isEmptyDiffer()) {return;}
-		$data = new ChangedData();
-		$data->fetchModel($model);
-		$this->modelDiffer->saveDiff($data);
+		$this->changeData->setNewModel($model);
+		$this->modelDiffer->saveDiff($this->changeData);
 	}
 
 	/**
@@ -35,9 +40,9 @@ class Manager
 	 */
 	public function createModel(Model $model) {
 		if ($this->isEmptyDiffer()) {return;}
-		$data = new ChangedData();
-		$data->setNewModel($model);
-		$this->modelDiffer->createDiff($data);
+		$this->changeData->setOldModel(null);
+		$this->changeData->setNewModel($model);
+		$this->modelDiffer->createDiff($this->changeData);
 	}
 	
 	/**
@@ -45,9 +50,9 @@ class Manager
 	 */
 	public function deleteModel(Model $model) {
 		if ($this->isEmptyDiffer()) {return;}
-		$data = new ChangedData();
-		$data->setOldModel($model);
-		$this->modelDiffer->deleteDiff($data);
+		$this->changeData->setOldModel($model);
+		$this->changeData->setNewModel(null);
+		$this->modelDiffer->deleteDiff($this->changeData);
 	}
 
 	/**
@@ -55,5 +60,12 @@ class Manager
 	 */
 	private function isEmptyDiffer() {
 		return $this->modelDiffer instanceof EmptyDiffer;
+	}
+
+	/**
+	 * @return \PPA\Rest\Log\ChangedData
+	 */
+	public function getChangeData() {
+		return $this->changeData;
 	}
 }

@@ -30,24 +30,15 @@ class ChangedData {
 	/**
 	 * @param Model $model
 	 */
-	public function fetchModel(Model $model) {
-		$className = $model->getClassName();
-		$this->oldModel = $className::findFirstById($model->id);
-		$this->newModel = $model;
-	}
-
-	/**
-	 * @param Model $model
-	 */
 	public function setNewModel(Model $model) {
-		$this->newModel = $model;
+		$this->newModel = clone $model;
 	}
 
 	/**
 	 * @param Model $model
 	 */
 	public function setOldModel(Model $model) {
-		$this->oldModel = $model;
+		$this->oldModel = clone $model;
 	}
 
 	/**

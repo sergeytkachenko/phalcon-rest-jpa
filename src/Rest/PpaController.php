@@ -129,6 +129,7 @@ class PpaController extends JsonController
 				'modelName' => $modelName,
 				'params' => $params
 			));
+			$this->logManager->getChangeData()->setOldModel($model);
 			if ($model->save()) {
 				$this->logManager->saveModel($model);
 				$errors = $this->saveRelations($model, Params::getRelations($this->request));
