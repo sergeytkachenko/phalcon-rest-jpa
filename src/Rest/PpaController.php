@@ -215,7 +215,7 @@ class PpaController extends JsonController
 				'params' => $relationValues
 			));
 			if ($relation->save()) {
-				$this->logManager->saveModel($model);
+				$this->logManager->saveModel($relation);
 			} else {
 				$messages[] = implode(', ', $relation->getMessages());
 			}
@@ -234,7 +234,7 @@ class PpaController extends JsonController
 			 * @var \Phalcon\Mvc\Model $related
 			 */
 			if ($related->delete()) {
-				$this->logManager->deleteModel($model);
+				$this->logManager->deleteModel($related);
 			} else {
 				$messages[] = implode(', ', $related->getMessages());
 			}
