@@ -76,7 +76,7 @@ class ChangedData {
 			$model->assign($diff);
 			$model->modelName = $modelName;
 			$model->columnName = $columnName;
-			if ($model->modelName == $model->columnName) {
+			if ($model->oldValue == $model->newValue) {
 				continue;
 			}
 			$models[] = $model;
