@@ -30,15 +30,15 @@ class ChangedData {
 	/**
 	 * @param Model $model
 	 */
-	public function setNewModel(Model $model) {
-		$this->newModel = clone $model;
+	public function setNewModel(Model $model = null) {
+		$this->newModel = $model ? clone $model : null;
 	}
 
 	/**
 	 * @param Model $model
 	 */
-	public function setOldModel(Model $model) {
-		$this->oldModel = clone $model;
+	public function setOldModel(Model $model = null) {
+		$this->oldModel = $model ? clone $model : null;
 	}
 
 	/**
