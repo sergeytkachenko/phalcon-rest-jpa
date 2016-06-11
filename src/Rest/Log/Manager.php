@@ -13,6 +13,11 @@ class Manager
 	protected $modelDiffer;
 
 	/**
+	 * @var string
+	 */
+	protected $modelName;
+
+	/**
 	 * @var \PPA\Rest\Log\ChangedData
 	 */
 	protected $changeData;
@@ -31,6 +36,7 @@ class Manager
 	 */
 	public function saveModel(Model $model) {
 		if ($this->isEmptyDiffer()) {return;}
+		$this->setModelName($model);
 		$this->changeData->setNewModel($model);
 		$this->invokeDiffer();
 	}
@@ -40,6 +46,7 @@ class Manager
 	 */
 	public function createModel(Model $model) {
 		if ($this->isEmptyDiffer()) {return;}
+		$this->setModelName($model);
 		$this->changeData->setOldModel(null);
 		$this->changeData->setNewModel($model);
 		$this->invokeDiffer();
@@ -50,6 +57,7 @@ class Manager
 	 */
 	public function deleteModel(Model $model) {
 		if ($this->isEmptyDiffer()) {return;}
+		$this->setModelName($model);
 		$this->changeData->setOldModel($model);
 		$this->changeData->setNewModel(null);
 		$this->invokeDiffer();
@@ -59,6 +67,14 @@ class Manager
 		$className = $model->getClassName();
 		$oldModel = clone $className::findFirstById($model->id);
 		$this->changeData->setOldModel($oldModel);
+	}
+
+	/**
+	 * @param \Phalcon\Mvc\Model $model
+	 */
+	public function setModelName($model) {
+		$className = $model->getClassName();
+		$this->modelName = $className;
 	}
 
 	/**
@@ -76,7 +92,7 @@ class Manager
 	}
 
 	private function invokeDiffer() {
-		$diffModel = $this->changeData->getDiffModel();
-		$this->modelDiffer->diff($diffModel);
+		$diffModels = $this->changeData->getDiffModels($this->modelName);
+		$this->modelDiffer->diff($diffModels);
 	}
 }

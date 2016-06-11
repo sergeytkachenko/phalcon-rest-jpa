@@ -64,13 +64,20 @@ class ChangedData {
 		return $this->differ->doDiff($oldModel, $newModel);
 	}
 
-	public function getDiffModel() {
+	/**
+	 * @param string $modelName
+	 * @param array $models
+	 * @return Data\Model
+	 */
+	public function getDiffModels($modelName, $models = array()) {
 		$diffList = $this->getDiff();
-		$model = new \PPA\Rest\Log\Data\Model();
 		foreach ($diffList as $columnName => $diff) {
-			$diffType = $diff->getType();
-			debug($diffType);
+			$model = new \PPA\Rest\Log\Data\Model();
+			$model->assign($diff);
+			$model->modelName = $modelName;
+			$model->columnName = $columnName;
+			$models[] = $model;
 		}
-		return $model;
+		return $models;
 	}
 }
