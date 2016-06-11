@@ -2,9 +2,11 @@
 
 namespace PPA\Rest\Log;
 
+use Diff\Differ\MapDiffer;
 use Phalcon\Mvc\Model;
 
 class ChangedData {
+
 	/**
 	 * @var \Phalcon\Mvc\Model
 	 */
@@ -13,6 +15,17 @@ class ChangedData {
 	 * @var \Phalcon\Mvc\Model
 	 */
 	protected $newModel;
+	/**
+	 * @var \Diff\Differ\MapDiffer
+	 */
+	protected $differ;
+
+	/**
+	 * ChangedData constructor.
+	 */
+	public function __construct() {
+		$this->differ = new MapDiffer();
+	}
 
 	/**
 	 * @param Model $model
@@ -49,5 +62,12 @@ class ChangedData {
 	 */
 	public function getNewModel() {
 		return $this->newModel;
+	}
+
+	/**
+	 * @return \Diff\DiffOp\DiffOp[]
+	 */
+	public function getDiff() {
+		return $this->differ->doDiff($this->oldModel, $this->newModel);
 	}
 }

@@ -18,6 +18,10 @@
 		}
 	},
 
+	"require": {
+		"diff/diff": "2.*"
+	},
+
 	"require-dev": {
 		"phpunit/phpunit": "~4.5",
 		"phalcon/incubator": "dev-master",
