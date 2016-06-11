@@ -215,7 +215,7 @@ class PpaController extends JsonController
 				'params' => $relationValues
 			));
 			if ($relation->save()) {
-				$this->logManager->saveModel($relation);
+				$this->logManager->createModel($relation);
 			} else {
 				$messages[] = implode(', ', $relation->getMessages());
 			}
