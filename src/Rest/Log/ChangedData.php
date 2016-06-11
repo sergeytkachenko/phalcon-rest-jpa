@@ -22,6 +22,11 @@ class ChangedData {
 	protected $differ;
 
 	/**
+	 * @var int
+	 */
+	protected $modelId;
+
+	/**
 	 * ChangedData constructor.
 	 */
 	public function __construct() {
@@ -40,6 +45,13 @@ class ChangedData {
 	 */
 	public function setOldModel(Model $model = null) {
 		$this->oldModel = $model ? clone $model : null;
+	}
+
+	/**
+	 * @param \Phalcon\Mvc\Model $model
+	 */
+	public function setModelId($model) {
+		$this->modelId = $model->id;
 	}
 
 	/**
@@ -77,6 +89,7 @@ class ChangedData {
 			$model->assign($diff);
 			$model->modelName = $modelName;
 			$model->columnName = $columnName;
+			$model->modelId = $this->modelId;
 			if ($model->oldValue == $model->newValue) {
 				continue;
 			}

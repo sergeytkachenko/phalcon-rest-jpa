@@ -44,6 +44,7 @@ class Manager
 		if ($this->isEmptyDiffer()) {return;}
 		$this->setModelName($model);
 		$this->changeData->setNewModel($model);
+		$this->changeData->setModelId($model);
 		$this->invokeDiffer();
 	}
 
@@ -55,6 +56,7 @@ class Manager
 		$this->setModelName($model);
 		$this->changeData->setOldModel(null);
 		$this->changeData->setNewModel($model);
+		$this->changeData->setModelId($model);
 		$this->invokeDiffer();
 	}
 	
@@ -65,6 +67,7 @@ class Manager
 		if ($this->isEmptyDiffer()) {return;}
 		$this->setModelName($model);
 		$this->changeData->setOldModel($model);
+		$this->changeData->setModelId($model);
 		$this->changeData->setNewModel(null);
 		$this->invokeDiffer();
 	}

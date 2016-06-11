@@ -5,6 +5,10 @@ use Diff\DiffOp\DiffOp;
 
 class Model {
 	/**
+	 * @var int
+	 */
+	public $modelId;
+	/**
 	 * @var string
 	 */
 	public $modelName = null;
