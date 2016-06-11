@@ -55,6 +55,12 @@ class Manager
 		$this->modelDiffer->deleteDiff($this->changeData);
 	}
 
+	public function setOldModel($model) {
+		$className = $model->getClassName();
+		$oldModel = clone $className::findFirstById($model->id);
+		$this->changeData->setOldModel($oldModel);
+	}
+
 	/**
 	 * @return bool
 	 */
