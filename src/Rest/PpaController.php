@@ -6,25 +6,30 @@ use Phalcon\Mvc\Model\ResultsetInterface;
 use PPA\Rest\Acl\CrudOperations;
 use PPA\Rest\Acl\CheckerAccessLevel;
 use PPA\Rest\Acl\Level\AllowedLevel;
-use PPA\Rest\Acl\Level\DeniedLevel;
 use PPA\Rest\Acl\Security;
 use PPA\Rest\Log\Data\EmptyDiffer;
 use PPA\Rest\Log\Data\ModelDiffer;
 use PPA\Rest\Log\Manager;
+use PPA\Rest\Model\RelationManager;
 use PPA\Rest\Url\Analyzer;
 use PPA\Rest\Url\Operators;
 use PPA\Rest\Utils\Params;
 
-class PpaController extends JsonController
-{
+class PpaController extends JsonController {
+	const SERVICE_NAME = 'ppaController';
+
 	/**
 	 * @var \PPA\Rest\Acl\Security
 	 */
-	private $security;
+	private $securityManager;
 	/**
 	 * @var \PPA\Rest\Log\Manager
 	 */
 	private $logManager;
+	/**
+	 * @var \PPA\Rest\Model\RelationManager
+	 */
+	private $relationManager;
 
 	/**
 	 * @return array
@@ -44,7 +49,7 @@ class PpaController extends JsonController
 			$params = Params::getMergeParams($this->request);
 			$query = Operators::buildQuery($url, $params);
 			$data = $query->execute();
-			$this->security->check(array(
+			$this->securityManager->check(array(
 				'model' => $data,
 				'action' => CrudOperations::READ,
 				'modelName' => Analyzer::getModelName($url),
@@ -124,7 +129,7 @@ class PpaController extends JsonController
 				);
 			}
 			$model->assign($params);
-			$this->security->check(array(
+			$this->securityManager->check(array(
 				'model' => $model,
 				'action' => CrudOperations::UPDATE,
 				'modelName' => $modelName,
@@ -132,7 +137,7 @@ class PpaController extends JsonController
 			));
 			$this->logManager->setOldModel($model);
 			if ($model->save()) {
-				$this->logManager->saveModel($model);
+				$this->logManager->updateModel($model);
 				$errors = $this->saveRelations($model, Params::getRelations($this->request));
 				if ($errors !== array()) {
 					return array(
@@ -156,7 +161,7 @@ class PpaController extends JsonController
 		 */
 		$model = new $modelName();
 		$model->assign($params);
-		$this->security->check(array(
+		$this->securityManager->check(array(
 			'model' => $model,
 			'action' => CrudOperations::CREATE,
 			'modelName' => $modelName,
@@ -208,7 +213,7 @@ class PpaController extends JsonController
 			$relation->assign(array(
 				$referencedFields => $model->id
 			));
-			$this->security->check(array(
+			$this->securityManager->check(array(
 				'model' => $relation,
 				'action' => CrudOperations::CREATE,
 				'modelName' => get_class($relation),
@@ -225,7 +230,7 @@ class PpaController extends JsonController
 
 	private function deleteRelation($model, $relationName, $messages = array()) {
 		foreach ($model->{$relationName} as $related) {
-			$this->security->check(array(
+			$this->securityManager->check(array(
 				'model' => $related,
 				'action' => CrudOperations::DELETE,
 				'modelName' => get_class($related)
@@ -266,7 +271,7 @@ class PpaController extends JsonController
 				'msg' => 'Record with id '. $id .' not found'
 			);
 		}
-		$this->security->check(array(
+		$this->securityManager->check(array(
 			'model' => $model,
 			'action' => CrudOperations::DELETE,
 			'modelName' => $modelName,
@@ -287,15 +292,18 @@ class PpaController extends JsonController
 	}
 
 	public function beforeExecuteRoute() {
+		$di = $this->getDI();
+		$di->set(PpaController::SERVICE_NAME, $this);
 		$this->initAclService();
 		$this->initLogService();
+		$this->relationManager = new RelationManager();
 	}
 
 	private function initAclService() {
 		$di = $this->getDI();
 		$aclServiceName = CheckerAccessLevel::DI_SERVICE_NAME;
 		$checkerAccessLevel = $di->has($aclServiceName) ? $di->get($aclServiceName) : new AllowedLevel();
-		$this->security = new Security($checkerAccessLevel);
+		$this->securityManager = new Security($checkerAccessLevel);
 	}
 
 	private function initLogService() {
@@ -303,5 +311,19 @@ class PpaController extends JsonController
 		$modelDifferService = ModelDiffer::DI_SERVICE_NAME;
 		$modelDiffer = $di->has($modelDifferService) ? $di->get($modelDifferService) : new EmptyDiffer();
 		$this->logManager = new Manager($modelDiffer);
+	}
+
+	/**
+	 * @return \PPA\Rest\Acl\Security
+	 */
+	public function getSecurityManager() {
+		return $this->securityManager;
+	}
+
+	/**
+	 * @return \PPA\Rest\Log\Manager
+	 */
+	public function getLogManager() {
+		return $this->logManager;
 	}
 }

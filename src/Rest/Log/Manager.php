@@ -40,7 +40,7 @@ class Manager
 	/**
 	 * @param Model $model
 	 */
-	public function saveModel(Model $model) {
+	public function updateModel(Model $model) {
 		if ($this->isEmptyDiffer()) {return;}
 		$this->setModelName($model);
 		$this->changeData->setNewModel($model);
