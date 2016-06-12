@@ -129,17 +129,19 @@ class RelationManager extends Injectable {
 	}
 
 	/**
-	 * @param array $relationData
+	 * @param array $relationsArray
 	 * @param \Phalcon\Mvc\Model $model
 	 * @param string $relationName
 	 */
-	public function save(array $relationData, $model, $relationName) {
-		$needDeleteRelations = $this->getNeedDelete($relationData, $model, $relationName);
+	public function save(array $relationsArray, $model, $relationName) {
+		$needDeleteRelations = $this->getNeedDelete($relationsArray, $model, $relationName);
 		$this->delete($needDeleteRelations);
-		if (empty($requestRelation['id'])) {
-			$this->create($relationData, $model, $relationName);
-		} else {
-			$this->update($relationData, $model, $relationName);
+		foreach ($relationsArray as $relationData) {
+			if (empty($relationData['id'])) {
+				$this->create($relationData, $model, $relationName);
+			} else {
+				$this->update($relationData, $model, $relationName);
+			}
 		}
 	}
 
