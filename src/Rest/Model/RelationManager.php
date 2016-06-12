@@ -31,13 +31,13 @@ class RelationManager extends Injectable {
 	}
 
 	/**
-	 * @param array $requestRelations
+	 * @param array $relationsArray
 	 * @param \Phalcon\Mvc\Model $model
 	 * @param string $relationName
 	 * @return \Phalcon\Mvc\Model\ResultsetInterface
 	 */
-	private function getNeedDelete(array $requestRelations, $model, $relationName) {
-		foreach ($requestRelations as $requestRelation) {
+	private function getNeedDelete(array $relationsArray, $model, $relationName) {
+		foreach ($relationsArray as $requestRelation) {
 			if (empty($requestRelation['id'])) {continue;}
 			$id = $requestRelation['id'];
 			$idList[] = $id;
@@ -77,20 +77,20 @@ class RelationManager extends Injectable {
 	}
 
 	/**
-	 * @param array $requestRelation
+	 * @param array $relationData
 	 * @param \Phalcon\Mvc\Model $model
 	 * @param string $relationName
 	 * @return mixed
 	 */
-	private function create(array $requestRelation, $model, $relationName) {
+	private function create(array $relationData, $model, $relationName) {
 		$modelRelation = $model->getModelsManager()->getRelationByAlias(get_class($model), $relationName);
 		$relationModel = new $modelRelation();
-		$relationModel->assign($requestRelation);
+		$relationModel->assign($relationData);
 		$this->securityManager->check(array(
 			'model' => $relationModel,
 			'action' => CrudOperations::CREATE,
 			'modelName' => get_class($relationModel),
-			'params' => $requestRelation
+			'params' => $relationData
 		));
 		$result = $relationModel->save();
 		if ($result) {
@@ -100,25 +100,25 @@ class RelationManager extends Injectable {
 	}
 
 	/**
-	 * @param array $requestRelation
+	 * @param array $relationData
 	 * @param \Phalcon\Mvc\Model $model
 	 * @param string $relationName
 	 * @return mixed
 	 * @throws Exception
 	 */
-	private function update(array $requestRelation, $model, $relationName) {
-		if (empty($requestRelation['id'])) {
+	private function update(array $relationData, $model, $relationName) {
+		if (empty($relationData['id'])) {
 			throw new Exception('relation "' . $relationName . '" have need id for update operation.');
 		}
-		$id = intval($requestRelation['id']);
+		$id = intval($relationData['id']);
 		$modelRelationClass = $model->getModelsManager()->getRelationByAlias(get_class($model), $relationName);
 		$modelRelation = $modelRelationClass::findById($id);
-		$modelRelation->assign($requestRelation);
+		$modelRelation->assign($relationData);
 		$this->securityManager->check(array(
 			'model' => $modelRelation,
 			'action' => CrudOperations::CREATE,
 			'modelName' => get_class($modelRelation),
-			'params' => $requestRelation
+			'params' => $relationData
 		));
 		$this->logManager->setOldModel($modelRelation);
 		$result = $model->save();
@@ -129,19 +129,17 @@ class RelationManager extends Injectable {
 	}
 
 	/**
-	 * @param array $requestRelations
+	 * @param array $relationData
 	 * @param \Phalcon\Mvc\Model $model
 	 * @param string $relationName
 	 */
-	public function save(array $requestRelations, $model, $relationName) {
-		$needDeleteRelations = $this->getNeedDelete($requestRelations, $model, $relationName);
+	public function save(array $relationData, $model, $relationName) {
+		$needDeleteRelations = $this->getNeedDelete($relationData, $model, $relationName);
 		$this->delete($needDeleteRelations);
-		foreach ($requestRelations as $requestRelation) {
-			if (empty($requestRelation['id'])) {
-				$this->create($requestRelation, $model, $relationName);
-			} else {
-				$this->update($requestRelation, $model, $relationName);
-			}
+		if (empty($requestRelation['id'])) {
+			$this->create($relationData, $model, $relationName);
+		} else {
+			$this->update($relationData, $model, $relationName);
 		}
 	}
 
