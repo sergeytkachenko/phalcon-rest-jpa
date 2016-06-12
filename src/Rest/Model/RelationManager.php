@@ -33,22 +33,37 @@ class RelationManager extends Injectable {
 	/**
 	 * @param array $relationsArray
 	 * @param \Phalcon\Mvc\Model $model
-	 * @param string $relationName
+	 * @param \Phalcon\Mvc\Model\Relation $relation
 	 * @return \Phalcon\Mvc\Model\ResultsetInterface
 	 */
-	private function getNeedDelete(array $relationsArray, $model, $relationName) {
+	private function getNeedDelete(array $relationsArray, $model, $relation) {
+		$modelRelation = $relation->getReferencedModel();
+		$referencedField = $relation->getReferencedFields();
+		$relationsArrayIdList = $this->getRelationsArrayIdList($relationsArray);
+		/**
+		 * @var \Phalcon\Mvc\Model\Criteria $q
+		 */
+		$q = $modelRelation::query();
+		if (!empty($relationsArrayIdList)) {
+			$q->notInWhere('id', $relationsArrayIdList);
+		}
+		$q->andWhere($referencedField . ' = :referencedField:', array('referencedField' => $model->id));
+		$result = $q->execute();
+		return $result;
+	}
+
+	/**
+	 * @param array $relationsArray
+	 * @param array $idList
+	 * @return array
+	 */
+	private function getRelationsArrayIdList(array $relationsArray, $idList = array()) {
 		foreach ($relationsArray as $requestRelation) {
 			if (empty($requestRelation['id'])) {continue;}
 			$id = $requestRelation['id'];
 			$idList[] = $id;
 		}
-		$relation = $model->$relationName;
-		/**
-		 * @var \Phalcon\Mvc\Model\Criteria $q
-		 */
-		$q = $relation::query();
-		$q->notInWhere('id', $idList);
-		return $q->execute();
+		return $idList;
 	}
 
 	/**
@@ -111,8 +126,12 @@ class RelationManager extends Injectable {
 			throw new Exception('relation "' . $relationName . '" have need id for update operation.');
 		}
 		$id = intval($relationData['id']);
-		$modelRelationClass = $model->getModelsManager()->getRelationByAlias(get_class($model), $relationName);
-		$modelRelation = $modelRelationClass::findById($id);
+		$relation = $model->getModelsManager()->getRelationByAlias(get_class($model), $relationName);
+		$relationClass = $relation->getReferencedModel();
+		$modelRelation = $relationClass::findFirstById($id);
+		if (!$modelRelation) {
+			throw new Exception($relationClass . '::findFirstById, with id=' . $id . ' not found');
+		}
 		$modelRelation->assign($relationData);
 		$this->securityManager->check(array(
 			'model' => $modelRelation,
@@ -131,16 +150,17 @@ class RelationManager extends Injectable {
 	/**
 	 * @param array $relationsArray
 	 * @param \Phalcon\Mvc\Model $model
-	 * @param string $relationName
+	 * @param \Phalcon\Mvc\Model\Relation $relation
 	 */
-	public function save(array $relationsArray, $model, $relationName) {
-		$needDeleteRelations = $this->getNeedDelete($relationsArray, $model, $relationName);
+	public function save(array $relationsArray, $model, $relation) {
+		$relationAlias = $relation->getOption('alias');
+		$needDeleteRelations = $this->getNeedDelete($relationsArray, $model, $relation);
 		$this->delete($needDeleteRelations);
 		foreach ($relationsArray as $relationData) {
 			if (empty($relationData['id'])) {
-				$this->create($relationData, $model, $relationName);
+				$this->create($relationData, $model, $relationAlias);
 			} else {
-				$this->update($relationData, $model, $relationName);
+				$this->update($relationData, $model, $relationAlias);
 			}
 		}
 	}
