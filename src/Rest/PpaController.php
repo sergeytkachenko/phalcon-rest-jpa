@@ -199,9 +199,9 @@ class PpaController extends JsonController {
 			$modelRelation = $model->getModelsManager()->getRelationByAlias(get_class($model), $relationName);
 			if ($modelRelation->getType() == 0) {continue;}
 			// TODO : раскоментировать когда почиться MultiSelect
-			//$this->relationManager->save($relationValues, $model, $modelRelation);
-			$messages = $this->deleteRelation($model, $relationName, $messages);
-			$messages = $this->createRelation($model, $relationName, $relationValues, $messages);
+			$this->relationManager->save($relationValues, $model, $modelRelation);
+//			$messages = $this->deleteRelation($model, $relationName, $messages);
+//			$messages = $this->createRelation($model, $relationName, $relationValues, $messages);
 		}
 		return $messages;
 	}
