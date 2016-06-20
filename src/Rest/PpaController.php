@@ -198,8 +198,9 @@ class PpaController extends JsonController {
 			if (!is_array($relationValues)) {continue;}
 			$modelRelation = $model->getModelsManager()->getRelationByAlias(get_class($model), $relationName);
 			if ($modelRelation->getType() == 0) {continue;}
-			$messages = $this->deleteRelation($model, $relationName, $messages);
-			$messages = $this->createRelation($model, $relationName, $relationValues, $messages);
+			$this->relationManager->save($relationValues, $model, $modelRelation);
+//			$messages = $this->deleteRelation($model, $relationName, $messages);
+//			$messages = $this->createRelation($model, $relationName, $relationValues, $messages);
 		}
 		return $messages;
 	}
