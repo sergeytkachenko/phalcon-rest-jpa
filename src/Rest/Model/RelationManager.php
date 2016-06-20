@@ -99,7 +99,10 @@ class RelationManager extends Injectable {
 	 */
 	private function create(array $relationData, $model, $relationName) {
 		$modelRelation = $model->getModelsManager()->getRelationByAlias(get_class($model), $relationName);
-		$relationModel = new $modelRelation();
+		$referencedModel = $modelRelation->getReferencedModel();
+		$referencedField = $modelRelation->getReferencedFields();
+		$relationModel = new $referencedModel();
+		$relationData[$referencedField] = $model->id;
 		$relationModel->assign($relationData);
 		$this->securityManager->check(array(
 			'model' => $relationModel,
