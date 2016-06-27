@@ -143,7 +143,7 @@ class RelationManager extends Injectable {
 			'params' => $relationData
 		));
 		$this->logManager->setOldModel($modelRelation);
-		$result = $model->save();
+		$result = $modelRelation->save();
 		if ($result) {
 			$this->logManager->updateModel($modelRelation);
 		}
