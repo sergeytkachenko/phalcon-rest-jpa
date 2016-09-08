@@ -74,6 +74,7 @@ abstract class Operators
 		$builder = new Builder();
 		$builder->setDI($di);
 		$builder->from($modelName);
+		self::setColumns($builder, $params);
 		$prepareUrl = self::getPrepareUrlOperators($fullUrl);
 		$whereSql = self::buildWhere($prepareUrl);
 		$whereSqlReplacement = Macros::replace($whereSql, $params, $modelName);
@@ -86,6 +87,18 @@ abstract class Operators
 		$query->setBindParams($params, true);
 
 		return $query;
+	}
+
+	/**
+	 * @param \Phalcon\Mvc\Model\Query\Builder $builder
+	 * @param $params
+	 */
+	private static function setColumns($builder, $params) {
+		$columns = \PPA\Rest\Utils\Params::getColumns($params);
+		if (!$columns) {
+			return;
+		}
+		$builder->columns($columns);
 	}
 
 	/**

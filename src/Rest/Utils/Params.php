@@ -41,4 +41,12 @@ abstract class Params
 		$jsonRawBody = (array)$request->getJsonRawBody(true);
 		return array_merge((array)$request->get(), (array)$request->getPost(), (array)$request->getPut(), $jsonRawBody);
 	}
+	
+	/**
+	 * @param array $params
+	 * @return mixed|null
+	 */
+	public static function getColumns(array $params) {
+		return key_exists('columns', $params) ? $params['columns'] : null;
+	}
 }
