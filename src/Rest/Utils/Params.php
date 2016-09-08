@@ -49,4 +49,12 @@ abstract class Params
 	public static function getColumns(array $params) {
 		return key_exists('columns', $params) ? $params['columns'] : null;
 	}
+
+	/**
+	 * @param array $params
+	 * @return mixed|null
+	 */
+	public static function getExcludeColumns(array $params) {
+		return key_exists('excluded', $params) ? $params['excluded'] : null;
+	}
 }

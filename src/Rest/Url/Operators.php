@@ -95,8 +95,41 @@ abstract class Operators
 	 */
 	private static function setColumns($builder, $params) {
 		$columns = \PPA\Rest\Utils\Params::getColumns($params);
-		if (!$columns) {
-			return;
+		$excludeColumns = \PPA\Rest\Utils\Params::getExcludeColumns($params);
+		if ($columns) {
+			$builder->columns($columns);
+		}
+		if ($excludeColumns) {
+			self::setExcludeColumns($builder, $excludeColumns);
+		}
+	}
+
+	/**
+	 * @param \Phalcon\Mvc\Model\Query\Builder $builder
+	 * @param array $excludeColumns
+	 */
+	private static function setExcludeColumns($builder, $excludeColumns) {
+		$modelName = $builder->getFrom();
+		/**
+		 * @var \Phalcon\Mvc\Model $model
+		 */
+		$model = new $modelName();
+		$columns = $model->getModelsMetaData()->getAttributes($model);
+		$columns = array_diff($columns, $excludeColumns);
+		foreach ($columns as $key => $column) {
+			foreach ($excludeColumns as $excludeColumn) {
+				$excludeColumn = Text::lower($excludeColumn);
+				if (!Text::endsWith($excludeColumn, '*')) {
+					break;
+				}
+				$excludeColumn = str_replace('*', '', $excludeColumn);
+				$column = Text::lower($column);
+				$isStartWith = Text::startsWith($column, $excludeColumn);
+				if ($isStartWith) {
+					unset($columns[$key]);
+					break;
+				}
+			}
 		}
 		$builder->columns($columns);
 	}
