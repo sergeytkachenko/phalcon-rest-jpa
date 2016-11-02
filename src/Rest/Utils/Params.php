@@ -69,8 +69,7 @@ abstract class Params
 	 */
 	public static function convertDate(array $params, Di $di) {
 		foreach ($params as $key => $value) {
-			$isDate = self::isDate($value);
-			if (!is_string($value) or !$isDate or !strtotime($value)) {
+			if (!is_string($value) or !self::isDate($value) or !strtotime($value)) {
 				continue;
 			}
 			try {
