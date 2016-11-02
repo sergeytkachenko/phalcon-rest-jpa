@@ -69,7 +69,8 @@ abstract class Params
 	 */
 	public static function convertDate(array $params, Di $di) {
 		foreach ($params as $key => $value) {
-			if (!is_string($value) or !strtotime($value)) {
+			$isDate = self::isDate($value);
+			if (!is_string($value) or !$isDate or !strtotime($value)) {
 				continue;
 			}
 			try {
@@ -87,6 +88,18 @@ abstract class Params
 			}
 		}
 		return $params;
+	}
+	
+	/**
+	 * @param $dateString
+	 * @return bool
+	 */
+	public static function isDate($dateString) {
+		$pattern = '/^2[0-9]{3}-[0-9]{2}-[0-9]{2}/';
+		if (preg_match($pattern, $dateString, $matches)) {
+			return true;
+		};
+		return false;
 	}
 	
 	/**
