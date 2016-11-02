@@ -63,6 +63,7 @@ abstract class Params
 	
 	/**
 	 * @param array $params
+	 * @return array
 	 */
 	public static function convertDate(array $params) {
 		foreach ($params as $key => $value) {
@@ -76,5 +77,6 @@ abstract class Params
 				
 			}
 		}
+		return $params;
 	}
 }
