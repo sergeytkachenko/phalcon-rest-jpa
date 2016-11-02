@@ -75,6 +75,12 @@ abstract class Params
 			try {
 				$timezoneOffset = self::getTimezoneOffset($di);
 				$moment = new Moment($value, 'CET');
+				if ($timezoneOffset > 0) {
+					$moment->subtractMinutes(abs($timezoneOffset));
+				}
+				if ($timezoneOffset < 0) {
+					$moment->addMinutes(abs($timezoneOffset));
+				}
 				$params[$key] = $moment->format('Y-m-d H:i:s');
 			} catch (MomentException $exception) {
 				
