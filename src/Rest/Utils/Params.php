@@ -66,7 +66,7 @@ abstract class Params
 	 */
 	public static function convertDate(array $params) {
 		foreach ($params as $key => $value) {
-			if (!is_string($value)) {
+			if (!is_string($value) or !strtotime($value)) {
 				continue;
 			}
 			try {
