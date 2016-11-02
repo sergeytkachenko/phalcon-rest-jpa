@@ -6,6 +6,7 @@ use Phalcon\Di\Injectable;
 use PPA\Rest\Acl\CrudOperations;
 use PPA\Rest\Exception;
 use PPA\Rest\PpaController;
+use PPA\Rest\Utils\Params;
 
 class RelationManager extends Injectable {
 	/**
@@ -160,6 +161,7 @@ class RelationManager extends Injectable {
 		$needDeleteRelations = $this->getNeedDelete($relationsArray, $model, $relation);
 		$this->delete($needDeleteRelations);
 		foreach ($relationsArray as $relationData) {
+			$relationData = Params::convertDate($relationData);
 			if (empty($relationData['id'])) {
 				$this->create($relationData, $model, $relationAlias);
 			} else {
