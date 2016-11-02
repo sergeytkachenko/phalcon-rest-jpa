@@ -3,6 +3,7 @@ namespace PPA\Rest\Utils;
 
 use Moment\Moment;
 use Moment\MomentException;
+use Phalcon\Di;
 use Phalcon\Http\Request;
 
 abstract class Params
@@ -42,7 +43,7 @@ abstract class Params
 	public static function getMergeParams(Request $request) {
 		$jsonRawBody = (array)$request->getJsonRawBody(true);
 		$params = array_merge((array)$request->get(), (array)$request->getPost(), (array)$request->getPut(), $jsonRawBody);;
-		return self::convertDate($params);
+		return self::convertDate($params, $request->getDI());
 	}
 	
 	/**
@@ -63,14 +64,16 @@ abstract class Params
 	
 	/**
 	 * @param array $params
+	 * @param Di $di
 	 * @return array
 	 */
-	public static function convertDate(array $params) {
+	public static function convertDate(array $params, Di $di) {
 		foreach ($params as $key => $value) {
 			if (!is_string($value) or !strtotime($value)) {
 				continue;
 			}
 			try {
+				$timezoneOffset = self::getTimezoneOffset($di);
 				$moment = new Moment($value, 'CET');
 				$params[$key] = $moment->format('Y-m-d H:i:s');
 			} catch (MomentException $exception) {
@@ -78,5 +81,18 @@ abstract class Params
 			}
 		}
 		return $params;
+	}
+	
+	/**
+	 * @param Di $di
+	 * @return int
+	 */
+	public static function getTimezoneOffset(Di $di) {
+		/**
+		 * @var \Phalcon\Http\Request $request
+		 */
+		$request = $di->get('request');
+		$timezoneOffset = $request->getHeader('TimezoneOffset');
+		return (int) $timezoneOffset;
 	}
 }
