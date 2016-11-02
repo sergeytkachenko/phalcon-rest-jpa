@@ -1,6 +1,8 @@
 <?php
 namespace PPA\Rest\Utils;
 
+use Moment\Moment;
+use Moment\MomentException;
 use Phalcon\Http\Request;
 
 abstract class Params
@@ -39,7 +41,8 @@ abstract class Params
 	 */
 	public static function getMergeParams(Request $request) {
 		$jsonRawBody = (array)$request->getJsonRawBody(true);
-		return array_merge((array)$request->get(), (array)$request->getPost(), (array)$request->getPut(), $jsonRawBody);
+		$params = array_merge((array)$request->get(), (array)$request->getPost(), (array)$request->getPut(), $jsonRawBody);;
+		return self::convertDate($params);
 	}
 	
 	/**
@@ -56,5 +59,22 @@ abstract class Params
 	 */
 	public static function getExcludeColumns(array $params) {
 		return key_exists('excluded', $params) ? $params['excluded'] : null;
+	}
+	
+	/**
+	 * @param array $params
+	 */
+	public static function convertDate(array $params) {
+		foreach ($params as $key => $value) {
+			if (!is_string($value)) {
+				continue;
+			}
+			try {
+				$moment = new Moment($value, 'CET');
+				$params[$key] = $moment->format('Y-m-d H:i:s');
+			} catch (MomentException $exception) {
+				
+			}
+		}
 	}
 }
