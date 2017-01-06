@@ -161,7 +161,7 @@ class RelationManager extends Injectable {
 		$needDeleteRelations = $this->getNeedDelete($relationsArray, $model, $relation);
 		$this->delete($needDeleteRelations);
 		foreach ($relationsArray as $relationData) {
-			$relationData = Params::convertDate($relationData, $this->getDI());
+			$relationData = Params::convertDates($relationData, $this->getDI());
 			if (empty($relationData['id'])) {
 				$this->create($relationData, $model, $relationAlias);
 			} else {

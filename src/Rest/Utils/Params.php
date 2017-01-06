@@ -43,7 +43,7 @@ abstract class Params
 	public static function getMergeParams(Request $request) {
 		$jsonRawBody = (array)$request->getJsonRawBody(true);
 		$params = array_merge((array)$request->get(), (array)$request->getPost(), (array)$request->getPut(), $jsonRawBody);;
-		return self::convertDate($params, $request->getDI());
+		return self::convertDates($params, $request->getDI());
 	}
 	
 	/**
@@ -67,26 +67,35 @@ abstract class Params
 	 * @param Di $di
 	 * @return array
 	 */
-	public static function convertDate(array $params, Di $di) {
+	public static function convertDates(array $params, Di $di) {
 		foreach ($params as $key => $value) {
-			if (!is_string($value) or !self::isDate($value) or !strtotime($value)) {
-				continue;
-			}
-			try {
-				$timezoneOffset = self::getTimezoneOffset($di);
-				$moment = new Moment($value, 'CET');
-				if ($timezoneOffset > 0) {
-					$moment->subtractMinutes(abs($timezoneOffset));
-				}
-				if ($timezoneOffset < 0) {
-					$moment->addMinutes(abs($timezoneOffset));
-				}
-				$params[$key] = $moment->format('Y-m-d H:i:s');
-			} catch (MomentException $exception) {
-				
-			}
+			$params[$key] = self::convertDate($value, $di);
 		}
 		return $params;
+	}
+
+	/**
+	 * @param $date
+	 * @param Di $di
+	 * @return string
+	 */
+	public static function convertDate($date, Di $di) {
+		if (!is_string($date) or !self::isDate($date) or !strtotime($date)) {
+			return $date;
+		}
+		try {
+			$timezoneOffset = self::getTimezoneOffset($di);
+			$moment = new Moment($date, 'CET');
+			if ($timezoneOffset > 0) {
+				$moment->subtractMinutes(abs($timezoneOffset));
+			}
+			if ($timezoneOffset < 0) {
+				$moment->addMinutes(abs($timezoneOffset));
+			}
+			return $moment->format('Y-m-d H:i:s');
+		} catch (MomentException $exception) {
+			return $date;
+		}
 	}
 	
 	/**
