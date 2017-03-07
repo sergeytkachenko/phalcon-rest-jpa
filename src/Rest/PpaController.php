@@ -99,10 +99,10 @@ class PpaController extends JsonController {
 		}
 		return $data->filter(function($model) use ($isFetchRelations, $isJoinedRelations, $needleRelations) {
 			if ($isFetchRelations) {
-				return $model->fetchRelations(true, $needleRelations);
+				return $model->fetchRelations(true, $needleRelations)->toArrayRelations();;
 			}
 			if ($isJoinedRelations) {
-				return $model->joinedRelations();
+				return $model->joinedRelations()->toArrayRelations();;
 			}
 			return $model;
 		});
