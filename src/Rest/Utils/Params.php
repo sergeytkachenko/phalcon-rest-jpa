@@ -103,6 +103,8 @@ abstract class Params
 	 * @return bool
 	 */
 	public static function isDate($dateString) {
+		// TODO delete this
+		return false;
 		$pattern = '/^2[0-9]{3}-[0-9]{2}-[0-9]{2}/';
 		if (preg_match($pattern, $dateString, $matches)) {
 			return true;
