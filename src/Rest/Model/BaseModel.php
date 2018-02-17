@@ -1,7 +1,6 @@
 <?php
 
 namespace PPA\Rest\Model;
-use Phalcon\Exception;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Relation;
 
@@ -115,7 +114,7 @@ trait BaseModel
 	 * @return \Phalcon\Mvc\Model
 	 */
 	private function joinedBelongsToRelation(Model $relationModel, $relationAlias) {
-		return $this->joinedRelations[$relationAlias] = @$relationModel;
+		return $this->joinedRelations[$relationAlias] = @$relationModel->toArray();
 	}
 
 	/**
