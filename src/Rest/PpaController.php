@@ -99,10 +99,10 @@ class PpaController extends JsonController {
 		}
 		return $data->filter(function($model) use ($isFetchRelations, $isJoinedRelations, $needleRelations) {
 			if ($isFetchRelations) {
-				return $model->fetchRelations(true, $needleRelations)->toArrayRelations();;
+				return $model->fetchRelations(true, $needleRelations)->toArrayRelations();
 			}
 			if ($isJoinedRelations) {
-				return $model->joinedRelations()->toArrayRelations();;
+				return $model->joinedRelations()->toArrayRelations();
 			}
 			return $model;
 		});
@@ -122,6 +122,12 @@ class PpaController extends JsonController {
 			 * @var \Phalcon\Mvc\Model $model
 			 */
 			$model = $modelName::findFirst($id);
+			$this->securityManager->check(array(
+				'model' => $model,
+				'action' => CrudOperations::UPDATE,
+				'modelName' => $modelName,
+				'params' => $params
+			));
 			if (!$model) {
 				return array(
 					'success' => false,
